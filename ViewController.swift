@@ -11,12 +11,27 @@ import JTAppleCalendar
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var dayInfoStackView: UIStackView!
+    @IBOutlet weak var goalLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var monthLabel: UILabel!
     
     let formatter = DateFormatter()
+    var goals = [Goal]()
+    var today =
+        Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        goals = CoreDataHelper.retrieveGoals()
+        
+        monthLabel.text = today.monthAsString()
+    }
+    
+    func setupCalendarView() {
+        calendarView.minimumLineSpacing = 0
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,7 +49,7 @@ extension ViewController: JTAppleCalendarViewDataSource{
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         
-        let startDate = formatter.date(from: "2017 04 01")! // You can use date generated from a formatter
+        let startDate = formatter.date(from: "2017 07 01")! // You can use date generated from a formatter
         let endDate = Date()                                // You can also use dates created from this function
 //        let parameters = ConfigurationParameters(startDate: startDate, endDate: endDate)
         
@@ -63,6 +78,12 @@ extension ViewController: JTAppleCalendarViewDelegate {
         } else {
             cell.dateLabel.textColor = UIColor.gray
         }
+        let currentDateString = formatter.string(from: Date())
+        let cellStateDateString = formatter.string(from: cellState.date)
+        
+        if  currentDateString ==  cellStateDateString {
+            cell.dateLabel.textColor = UIColor.red
+        }
         return cell
     }
     
@@ -71,6 +92,13 @@ extension ViewController: JTAppleCalendarViewDelegate {
         validCell.selectedView.isHidden = false
         
         dayInfoStackView.isHidden = false
+        
+        //changes the goal info for the specific day
+        guard (validCell.dayGoal) != nil else {dayInfoStackView.isHidden = true; return}
+            goalLabel.text = validCell.dayGoal?.title
+            let count = validCell.dayGoal?.count
+            descriptionLabel.text = "Complete \(String(describing: count)) more to reach your goal"
+
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
