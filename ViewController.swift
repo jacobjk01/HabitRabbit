@@ -12,7 +12,7 @@ import JTAppleCalendar
 class ViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
-    @IBOutlet weak var dayInfoStackView: UIStackView!
+    @IBOutlet weak var goalInfoView: UIView!
     @IBOutlet weak var goalLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var monthLabel: UILabel!
@@ -27,6 +27,7 @@ class ViewController: UIViewController {
         goals = CoreDataHelper.retrieveGoals()
         
         monthLabel.text = today.monthAsString()
+        goalInfoView.isHidden = true
     }
     
     func setupCalendarView() {
@@ -91,10 +92,10 @@ extension ViewController: JTAppleCalendarViewDelegate {
         guard let validCell = cell as? CustomCell else { return }
         validCell.selectedView.isHidden = false
         
-        dayInfoStackView.isHidden = false
+        goalInfoView.isHidden = false
         
         //changes the goal info for the specific day
-        guard (validCell.dayGoal) != nil else {dayInfoStackView.isHidden = true; return}
+        guard (validCell.dayGoal) != nil else {goalInfoView.isHidden = true; return}
             goalLabel.text = validCell.dayGoal?.title
             let count = validCell.dayGoal?.count
             descriptionLabel.text = "Complete \(String(describing: count)) more to reach your goal"
