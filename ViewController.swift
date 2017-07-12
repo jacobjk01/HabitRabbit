@@ -16,9 +16,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var goalLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var monthLabel: UILabel!
+    @IBOutlet weak var groupLabel: UILabel!
+    @IBOutlet weak var groupColorBox: UIView!
     
     let formatter = DateFormatter()
-    static var goals = [Goal]()
+    static var goals = CoreDataHelper.retrieveGoals()
     var today =
         Date()
     
@@ -28,11 +30,22 @@ class ViewController: UIViewController {
         
         monthLabel.text = today.monthAsString()
         goalInfoView.isHidden = true
+        
+        for i in ViewController.goals {
+            print(i.title)
+            print(i.group)
+            print(i.rerun)
+            print(i.startDate)
+            print(i.endDate)
+            print(i.count)
+        }
+        
+        setupCalendarView()
     }
     
     func setupCalendarView() {
         calendarView.minimumLineSpacing = 0
-        
+        calendarView.minimumInteritemSpacing = 0
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,6 +57,15 @@ class ViewController: UIViewController {
         
     }
 
+    @IBAction func deleteGoalButtonPressed(_ sender: UIButton) {
+    }
+    
+    func updateGoalInfo (goal: Goal) {
+        goalLabel.text = goal.title
+        let count = goal.count
+        descriptionLabel.text = "Complete \(String(describing: count)) more to reach your goal"
+        groupLabel.text = goal.group
+    }
 }
 
 extension ViewController: JTAppleCalendarViewDataSource{
@@ -91,9 +113,18 @@ extension ViewController: JTAppleCalendarViewDelegate {
         }
         
         // Setup Goals
-        let isvalidGoal = ViewController.goals.map{ (goal: Goal) -> Bool in
-            return date.isBetween(date: goal.startDate!, andDate: goal.endDate!)
+        _ = ViewController.goals.map{ (goal: Goal) -> Bool in
+            if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
+                cell.dayGoals.append(goal)
+                cell.goalDurationLine.isHidden = false
+                return true
+            }
+            return false
         }
+        if cell.dayGoals.count == 0 {
+            cell.goalDurationLine.isHidden = true
+        }
+        
         //gives me an array but i need to find out how many goals there are for this day and mark them all.
         //later i need to implement colors of the groups.
         
@@ -107,12 +138,15 @@ extension ViewController: JTAppleCalendarViewDelegate {
         
         goalInfoView.isHidden = false
         
+        if validCell.dayGoals.count == 0 {
+            validCell.goalDurationLine.isHidden = true
+            goalInfoView.isHidden = true
+        }
+        
         //changes the goal info for the specific day
-        guard (validCell.dayGoal) != nil else {goalInfoView.isHidden = true; return}
-            goalLabel.text = validCell.dayGoal?.title
-            let count = validCell.dayGoal?.count
-            descriptionLabel.text = "Complete \(String(describing: count)) more to reach your goal"
-
+        for dayGoal in validCell.dayGoals {
+            updateGoalInfo(goal: dayGoal)
+        }
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {

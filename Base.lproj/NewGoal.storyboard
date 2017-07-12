@@ -137,6 +137,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ubH-1X-23L">
+                                        <rect key="frame" x="143" y="856" width="254" height="122"/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="UVg-Up-lpX" id="S2t-Ld-mff"/>
+                                            <outlet property="delegate" destination="UVg-Up-lpX" id="OGW-8R-8Tw"/>
+                                        </connections>
+                                    </pickerView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Ipm-sy-I1c">
                                         <rect key="frame" x="92" y="986" width="272" height="30"/>
                                         <subviews>
@@ -154,16 +161,56 @@
                                             </textField>
                                         </subviews>
                                     </stackView>
-                                    <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ubH-1X-23L">
-                                        <rect key="frame" x="143" y="856" width="254" height="122"/>
-                                        <connections>
-                                            <outlet property="dataSource" destination="UVg-Up-lpX" id="S2t-Ld-mff"/>
-                                            <outlet property="delegate" destination="UVg-Up-lpX" id="OGW-8R-8Tw"/>
-                                        </connections>
-                                    </pickerView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y5M-ZK-m18" userLabel="helpView">
+                                        <rect key="frame" x="32" y="374" width="353" height="174"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Crj-O9-hU2">
+                                                <rect key="frame" x="18" y="23" width="316" height="87"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="87" id="c5j-Uz-YCc"/>
+                                                </constraints>
+                                                <string key="text">Count refers to how many times you want to complete your goal in your selected amount of time. For example, you could specify that you want to work out three times in this week</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6GW-oQ-8eN">
+                                                <rect key="frame" x="18" y="118" width="316" height="2"/>
+                                                <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="6"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P8V-DI-hEn">
+                                                <rect key="frame" x="18" y="133" width="316" height="30"/>
+                                                <state key="normal" title="OK">
+                                                    <color key="titleColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="helpViewResolved:" destination="UVg-Up-lpX" eventType="touchUpInside" id="IU7-Y1-Sh8"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="Crj-O9-hU2" firstAttribute="leading" secondItem="6GW-oQ-8eN" secondAttribute="leading" id="C0v-b3-65L"/>
+                                            <constraint firstItem="P8V-DI-hEn" firstAttribute="leading" secondItem="6GW-oQ-8eN" secondAttribute="leading" id="OVv-Sm-v1Y"/>
+                                            <constraint firstItem="P8V-DI-hEn" firstAttribute="leading" secondItem="y5M-ZK-m18" secondAttribute="leading" constant="18" id="PYe-sT-4EE"/>
+                                            <constraint firstItem="P8V-DI-hEn" firstAttribute="top" secondItem="6GW-oQ-8eN" secondAttribute="bottom" constant="13" id="Vni-tr-B4c"/>
+                                            <constraint firstItem="Crj-O9-hU2" firstAttribute="trailing" secondItem="6GW-oQ-8eN" secondAttribute="trailing" id="bJ1-VC-zf5"/>
+                                            <constraint firstItem="Crj-O9-hU2" firstAttribute="top" secondItem="y5M-ZK-m18" secondAttribute="top" constant="23" id="bO6-yN-OeP"/>
+                                            <constraint firstItem="P8V-DI-hEn" firstAttribute="centerX" secondItem="y5M-ZK-m18" secondAttribute="centerX" id="dvj-SY-1CL"/>
+                                            <constraint firstItem="6GW-oQ-8eN" firstAttribute="top" secondItem="Crj-O9-hU2" secondAttribute="bottom" constant="8" symbolic="YES" id="hLW-UK-sAx"/>
+                                            <constraint firstAttribute="bottom" secondItem="P8V-DI-hEn" secondAttribute="bottom" constant="11" id="k5e-si-g4m"/>
+                                            <constraint firstItem="P8V-DI-hEn" firstAttribute="trailing" secondItem="6GW-oQ-8eN" secondAttribute="trailing" id="rFq-Dz-ebQ"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="hCf-Hu-a6h" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" id="01G-rC-oWg"/>
+                                    <constraint firstItem="y5M-ZK-m18" firstAttribute="top" secondItem="SZG-hc-7wT" secondAttribute="bottom" constant="72" id="4o1-x7-rRQ"/>
                                     <constraint firstItem="SZG-hc-7wT" firstAttribute="top" secondItem="pEP-MC-ME4" secondAttribute="bottom" constant="80" id="7vB-e2-YaM"/>
                                     <constraint firstItem="XFJ-cs-cDN" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" constant="22" id="AKO-Te-L01"/>
                                     <constraint firstItem="XFJ-cs-cDN" firstAttribute="leading" secondItem="BVw-IX-qhF" secondAttribute="leading" id="APQ-vf-byd"/>
@@ -209,9 +256,12 @@
                                     <constraint firstItem="AWb-Qa-bZg" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" constant="34" id="lAM-ho-NQ8"/>
                                     <constraint firstItem="sfd-w5-waY" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" constant="20" id="oqH-Tw-MXD"/>
                                     <constraint firstItem="AWb-Qa-bZg" firstAttribute="bottom" secondItem="BWF-eW-h31" secondAttribute="bottom" id="tz9-tM-pd7"/>
+                                    <constraint firstItem="y5M-ZK-m18" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" constant="32" id="uht-UR-h69"/>
+                                    <constraint firstItem="KoZ-Og-cjV" firstAttribute="top" secondItem="y5M-ZK-m18" secondAttribute="bottom" constant="29" id="unM-Fy-YgX"/>
                                     <constraint firstItem="SZG-hc-7wT" firstAttribute="leading" secondItem="XFJ-cs-cDN" secondAttribute="trailing" constant="8" symbolic="YES" id="uyt-0F-XNG"/>
                                     <constraint firstItem="Ipm-sy-I1c" firstAttribute="top" secondItem="bkX-Hf-rm0" secondAttribute="bottom" constant="8" symbolic="YES" id="vv3-Oa-FUp"/>
                                     <constraint firstItem="hCf-Hu-a6h" firstAttribute="top" secondItem="Ipm-sy-I1c" secondAttribute="bottom" constant="66" id="xc2-Km-wGA"/>
+                                    <constraint firstItem="y5M-ZK-m18" firstAttribute="centerX" secondItem="srE-8I-o4M" secondAttribute="centerX" id="yds-gg-WeE"/>
                                     <constraint firstItem="pEP-MC-ME4" firstAttribute="bottom" secondItem="uUT-e0-Ae8" secondAttribute="bottom" id="z06-sR-Q8F"/>
                                 </constraints>
                             </scrollView>
@@ -258,6 +308,7 @@
                         <outlet property="countTextField" destination="BWF-eW-h31" id="Stu-nI-vmP"/>
                         <outlet property="endTimePicker" destination="859-6U-7uQ" id="kKB-7z-C5d"/>
                         <outlet property="groupPicker" destination="ubH-1X-23L" id="g8N-Zk-lTi"/>
+                        <outlet property="helpView" destination="y5M-ZK-m18" id="WzC-58-WvD"/>
                         <outlet property="repeatPicker" destination="Zs2-ch-Vnb" id="rn1-F2-oMY"/>
                         <outlet property="scrollView" destination="srE-8I-o4M" id="EzP-CS-bNI"/>
                         <outlet property="specifyStackView" destination="Ipm-sy-I1c" id="GDf-2P-FtO"/>

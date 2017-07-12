@@ -20,13 +20,15 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     @IBOutlet weak var groupPicker: UIPickerView!
     @IBOutlet weak var specifyStackView: UIStackView!
     @IBOutlet weak var specifyTextField: UITextField!
+    @IBOutlet weak var helpView: UIView!
     
     var newGoal = CoreDataHelper.newGoal()
     let pickerData = ["none", "daily", "weekly", "monthly"]
     var groups = CoreDataHelper.retrieveGroups()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        helpView.isHidden = true
         if (groups.count == 0) {
             groups.append("other")
         } else if (groups[groups.count - 1] != "other") {
@@ -57,19 +59,17 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if (pickerView.tag == 0) {
             newGoal.rerun = pickerData[row]
-        } else if (groups[row] == "other") {
+        } else if groups[row] == "other" {
             specifyStackView.isHidden = false
-            newGoal.group = specifyTextField.text
         } else {
             specifyStackView.isHidden = true
             newGoal.group = groups[row]
         }
-        
     }
     
     @IBAction func submitButtonPressed(_ sender: Any) {
         if titleTextField.text != nil {
-            newGoal.title = titleTextField.text
+            newGoal.title = titleTextField.text!
             //print(newGoal.title)
         }
         
@@ -78,21 +78,30 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         newGoal.endDate = endTimePicker.date as NSDate
         //print(newGoal.endDate)
         
-        if (countTextField.text != nil) {
+        if (!(countTextField.text?.isEmpty)!) {
             newGoal.count = Int32(countTextField.text!)!
         }
         
         //print(newGoal.rerun)
         
-        //print(newGoal.group)
-        groups = CoreDataHelper.retrieveGroups()
-        
+        if (!(specifyTextField.text!.isEmpty) && specifyStackView.isHidden == false) {
+            newGoal.group = specifyTextField.text!
+        }
+    
         CoreDataHelper.saveGoal()
+        groups = CoreDataHelper.retrieveGroups()
+        print(self.groups)
     }
-    @IBAction func infoButton(_ sender: Any) {
-        
+    @IBAction func infoButton(_ sender: UIButton) {
+        helpView.layer.borderColor = UIColor.lightGray.cgColor
+        helpView.layer.borderWidth = 1.5
+        helpView.layer.cornerRadius = 6
+        helpView.isHidden = false
     }
     
+    @IBAction func helpViewResolved(_ sender: UIButton) {
+        helpView.isHidden = true
+    }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -17,6 +17,10 @@ extension Date {
     }
     
     func isBetween(date date1: NSDate, andDate date2: NSDate) -> Bool {
+        if (date1.compare(self) == ComparisonResult.orderedSame) {
+            return true
+        }
         return date1.compare(self).rawValue * self.compare(date2 as Date).rawValue >= 0
     }
+    
 }
