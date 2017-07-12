@@ -110,11 +110,6 @@
                                                                 <constraint firstAttribute="width" constant="40" id="5zE-7r-qau"/>
                                                                 <constraint firstAttribute="height" constant="40" id="ja8-d1-9VK"/>
                                                             </constraints>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="15"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MG7-sQ-2mO">
                                                             <rect key="frame" x="34" y="44.666666666666657" width="42" height="20.333333333333343"/>
@@ -122,16 +117,25 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJe-vO-tT8">
+                                                            <rect key="frame" x="0.0" y="89" width="110" height="2"/>
+                                                            <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </view>
                                                     </subviews>
                                                 </view>
                                                 <constraints>
-                                                    <constraint firstItem="YKa-3f-UgB" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="Uzm-yS-KzH"/>
-                                                    <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="WR4-cQ-Zwh"/>
-                                                    <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="a7r-Yk-a4J"/>
+                                                    <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="PEt-m8-PGD"/>
+                                                    <constraint firstItem="YKa-3f-UgB" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="YWM-15-xId"/>
+                                                    <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="cbA-Se-vQw"/>
+                                                    <constraint firstAttribute="bottomMargin" secondItem="kJe-vO-tT8" secondAttribute="bottom" constant="11" id="hCg-4U-EEF"/>
+                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="leading" secondItem="Igl-4h-YCb" secondAttribute="leadingMargin" constant="-8" id="kYw-42-EyN"/>
+                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="top" secondItem="YKa-3f-UgB" secondAttribute="bottom" constant="14" id="oc0-Xi-NHC"/>
+                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="qjZ-Ad-JuD"/>
                                                     <constraint firstItem="YKa-3f-UgB" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="s8N-Tc-24B"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="dateLabel" destination="MG7-sQ-2mO" id="uWJ-B9-0Hv"/>
+                                                    <outlet property="goalDurationLine" destination="kJe-vO-tT8" id="Vhf-qv-VKp"/>
                                                     <outlet property="selectedView" destination="YKa-3f-UgB" id="4io-hm-Yax"/>
                                                 </connections>
                                             </collectionViewCell>

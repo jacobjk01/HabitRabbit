@@ -70,21 +70,39 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     @IBAction func submitButtonPressed(_ sender: Any) {
         if titleTextField.text != nil {
             newGoal.title = titleTextField.text
+            //print(newGoal.title)
         }
         
         newGoal.startDate = startTimePicker.date as NSDate
+        //print(newGoal.startDate)
         newGoal.endDate = endTimePicker.date as NSDate
+        //print(newGoal.endDate)
         
+        if (countTextField.text != nil) {
+            newGoal.count = Int32(countTextField.text!)!
+        }
         
+        //print(newGoal.rerun)
         
+        //print(newGoal.group)
+        groups = CoreDataHelper.retrieveGroups()
         
-        
+        CoreDataHelper.saveGoal()
     }
     @IBAction func infoButton(_ sender: Any) {
         
     }
     
-    @IBAction func unwindToCalendar(_ segue: UIStoryboardSegue) {
-        
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            if identifier == "cancel" {
+                print("Cancel button tapped")
+            } else if identifier == "save" {
+                print("Save button tapped")
+            }
+        }
+        ViewController.goals = CoreDataHelper.retrieveGoals()
     }
 }

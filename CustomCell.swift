@@ -14,6 +14,8 @@ class CustomCell: JTAppleCell {
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var selectedView: UIView!
+    @IBOutlet weak var goalDurationLine: UIView!
     
     var dayGoal: Goal?
+    
 }

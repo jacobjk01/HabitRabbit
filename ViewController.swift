@@ -18,13 +18,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var monthLabel: UILabel!
     
     let formatter = DateFormatter()
-    var goals = [Goal]()
+    static var goals = [Goal]()
     var today =
         Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        goals = CoreDataHelper.retrieveGoals()
+        ViewController.goals = CoreDataHelper.retrieveGoals()
         
         monthLabel.text = today.monthAsString()
         goalInfoView.isHidden = true
@@ -40,6 +40,9 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func unwindToCalendar(_ segue: UIStoryboardSegue) {
+        
+    }
 
 }
 
@@ -72,6 +75,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
             
         // Setup Cell text
         cell.dateLabel.text = cellState.text
+        cell.selectedView.layer.cornerRadius = cell.selectedView.frame.width/2
         
         // Setup text color
         if cellState.dateBelongsTo == .thisMonth {
@@ -85,11 +89,20 @@ extension ViewController: JTAppleCalendarViewDelegate {
         if  currentDateString ==  cellStateDateString {
             cell.dateLabel.textColor = UIColor.red
         }
+        
+        // Setup Goals
+        let isvalidGoal = ViewController.goals.map{ (goal: Goal) -> Bool in
+            return date.isBetween(date: goal.startDate!, andDate: goal.endDate!)
+        }
+        //gives me an array but i need to find out how many goals there are for this day and mark them all.
+        //later i need to implement colors of the groups.
+        
         return cell
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         guard let validCell = cell as? CustomCell else { return }
+        
         validCell.selectedView.isHidden = false
         
         goalInfoView.isHidden = false

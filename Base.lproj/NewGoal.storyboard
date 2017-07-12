@@ -51,7 +51,7 @@
                                         </state>
                                         <connections>
                                             <action selector="submitButtonPressed:" destination="UVg-Up-lpX" eventType="touchUpInside" id="637-fc-4rE"/>
-                                            <segue destination="aCp-BO-TUY" kind="unwind" unwindAction="unwindToCalendar:" id="VjJ-CL-IZd"/>
+                                            <segue destination="aCp-BO-TUY" kind="unwind" identifier="Cancel" unwindAction="unwindToCalendar:" id="VjJ-CL-IZd"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Repeat:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BVw-IX-qhF">
@@ -229,7 +229,7 @@
                                 <rect key="frame" x="15" y="25" width="48" height="30"/>
                                 <state key="normal" title="Cancel"/>
                                 <connections>
-                                    <segue destination="aCp-BO-TUY" kind="unwind" unwindAction="unwindToCalendar:" id="1e4-fD-5az"/>
+                                    <segue destination="aCp-BO-TUY" kind="unwind" identifier="Save" unwindAction="unwindToCalendar:" id="1e4-fD-5az"/>
                                 </connections>
                             </button>
                         </subviews>

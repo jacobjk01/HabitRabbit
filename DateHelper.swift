@@ -15,4 +15,8 @@ extension Date {
         df.setLocalizedDateFormatFromTemplate("MMM")
         return df.string(from: self)
     }
+    
+    func isBetween(date date1: NSDate, andDate date2: NSDate) -> Bool {
+        return date1.compare(self).rawValue * self.compare(date2 as Date).rawValue >= 0
+    }
 }
