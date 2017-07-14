@@ -17,6 +17,4 @@ class CustomCell: JTAppleCell {
     @IBOutlet weak var goalDurationLine: UIView!
     
     var dayGoals = [Goal]()
-    
-    
 }

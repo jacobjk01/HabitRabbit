@@ -13,23 +13,25 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var goalInfoView: UIView!
-    @IBOutlet weak var goalLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var monthLabel: UILabel!
-    @IBOutlet weak var groupLabel: UILabel!
-    @IBOutlet weak var groupColorBox: UIView!
+    @IBOutlet weak var tableView: UITableView!
     
     let formatter = DateFormatter()
     static var goals = CoreDataHelper.retrieveGoals()
+    static var tableGoals = [Goal]()
     var today =
         Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         ViewController.goals = CoreDataHelper.retrieveGoals()
+        tableView.reloadData()
         
         monthLabel.text = today.monthAsString()
         goalInfoView.isHidden = true
+        
+        tableView.delegate = self
+        tableView.dataSource = self
         
         for i in ViewController.goals {
             print(i.title)
@@ -59,13 +61,6 @@ class ViewController: UIViewController {
 
     @IBAction func deleteGoalButtonPressed(_ sender: UIButton) {
     }
-    
-    func updateGoalInfo (goal: Goal) {
-        goalLabel.text = goal.title
-        let count = goal.count
-        descriptionLabel.text = "Complete \(String(describing: count)) more to reach your goal"
-        groupLabel.text = goal.group
-    }
 }
 
 extension ViewController: JTAppleCalendarViewDataSource{
@@ -79,7 +74,7 @@ extension ViewController: JTAppleCalendarViewDataSource{
         let endDate = Date()                                // You can also use dates created from this function
 //        let parameters = ConfigurationParameters(startDate: startDate, endDate: endDate)
         
-                let parameters = ConfigurationParameters(startDate: startDate,
+            let parameters = ConfigurationParameters(startDate: startDate,
                                                          endDate: endDate,
                                                  numberOfRows: 6, // Only 1, 2, 3, & 6 are allowed
             calendar: Calendar.current,
@@ -121,10 +116,11 @@ extension ViewController: JTAppleCalendarViewDelegate {
             }
             return false
         }
+        
         if cell.dayGoals.count == 0 {
             cell.goalDurationLine.isHidden = true
         }
-        
+    
         //gives me an array but i need to find out how many goals there are for this day and mark them all.
         //later i need to implement colors of the groups.
         
@@ -141,17 +137,64 @@ extension ViewController: JTAppleCalendarViewDelegate {
         if validCell.dayGoals.count == 0 {
             validCell.goalDurationLine.isHidden = true
             goalInfoView.isHidden = true
+            print("you have no goals on this day")
         }
         
-        //changes the goal info for the specific day
-        for dayGoal in validCell.dayGoals {
-            updateGoalInfo(goal: dayGoal)
+        ViewController.tableGoals = []
+        
+        for goal in ViewController.goals {
+            if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
+                ViewController.tableGoals.append(goal)
+            }
         }
+        
+        tableView.reloadData()
+        
+        print(ViewController.tableGoals)
+        
+        //changes the goal info in table view cells
+        //I need some kind of reference.
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         guard let validCell = cell as? CustomCell else { return }
         validCell.selectedView.isHidden = true
+        ViewController.tableGoals = []
+    }
+}
+
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ViewController.tableGoals.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GoalCell") as! GoalCell
+        
+        print(ViewController.tableGoals)
+        
+        let row = indexPath.row
+        let goal = ViewController.tableGoals[row]
+        
+        cell.goalLabel.text = goal.title
+        cell.descriptionLabel.text = "Complete your task \(goal.count) more times to reach your goal"
+        cell.groupLabel.text = goal.group
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        // 2
+        if editingStyle == .delete {
+            // 3
+            let deleteIndex = ViewController.goals.index(of: ViewController.tableGoals[indexPath.row])
+            
+            CoreDataHelper.delete(goal: ViewController.goals[deleteIndex!])
+            ViewController.tableGoals.remove(at: indexPath.row)
+            ViewController.goals = CoreDataHelper.retrieveGoals()
+            tableView.reloadData()
+        }
     }
 }
 

@@ -24,16 +24,24 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     
     var newGoal = CoreDataHelper.newGoal()
     let pickerData = ["none", "daily", "weekly", "monthly"]
-    var groups = CoreDataHelper.retrieveGroups()
+    var groups = Array(Set(CoreDataHelper.retrieveGroups()))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         helpView.isHidden = true
+        specifyStackView.isHidden = true
         if (groups.count == 0) {
             groups.append("other")
+            specifyStackView.isHidden = false
         } else if (groups[groups.count - 1] != "other") {
                 groups.append("other")
         }
+        startTimePicker.addTarget(self, action: #selector(NewGoalController.datePickerChanged), for: UIControlEvents.valueChanged)
+
+    }
+    
+    func datePickerChanged() {
+        endTimePicker.minimumDate = startTimePicker.date
     }
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -90,6 +98,7 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     
         CoreDataHelper.saveGoal()
         groups = CoreDataHelper.retrieveGroups()
+        ViewController.tableGoals.append(newGoal)
         print(self.groups)
     }
     @IBAction func infoButton(_ sender: UIButton) {

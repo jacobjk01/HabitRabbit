@@ -207,6 +207,18 @@
                                             <constraint firstItem="P8V-DI-hEn" firstAttribute="trailing" secondItem="6GW-oQ-8eN" secondAttribute="trailing" id="rFq-Dz-ebQ"/>
                                         </constraints>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Color:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kbm-9e-hl5">
+                                        <rect key="frame" x="93" y="1033" width="59" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VIj-C7-9Il">
+                                        <rect key="frame" x="183" y="1028" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="hCf-Hu-a6h" firstAttribute="leading" secondItem="srE-8I-o4M" secondAttribute="leading" id="01G-rC-oWg"/>
