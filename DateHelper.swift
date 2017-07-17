@@ -16,11 +16,12 @@ extension Date {
         return df.string(from: self)
     }
     
-    func isBetween(date date1: NSDate, andDate date2: NSDate) -> Bool {
-        if date1.compare(self) == ComparisonResult.orderedSame {
+    func isBetween(date date1: Date, andDate date2: Date) -> Bool {
+        if (self == date1 || self == date2) {
+            return true
+        } else if (self > date1 && self < date2) {
             return true
         }
-        return date1.compare(self).rawValue * self.compare(date2 as Date).rawValue >= 0
+        return false
     }
-    
 }

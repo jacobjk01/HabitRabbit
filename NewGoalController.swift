@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UIPopoverPresentationControllerDelegate, ColorPickerDelegate {
 
     @IBOutlet weak var startTimePicker: UIDatePicker!
     @IBOutlet weak var endTimePicker: UIDatePicker!
@@ -21,23 +21,34 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     @IBOutlet weak var specifyStackView: UIStackView!
     @IBOutlet weak var specifyTextField: UITextField!
     @IBOutlet weak var helpView: UIView!
+    @IBOutlet weak var changeColorButton: UIButton!
+    @IBOutlet weak var colorChangeStackView: UIStackView!
     
     var newGoal = CoreDataHelper.newGoal()
     let pickerData = ["none", "daily", "weekly", "monthly"]
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
+    var groupColors = Array(Set(CoreDataHelper.retrieveGroupColors()))
+    
+    var currentGroup = ""
+    var currentGroupColor = ""
+    
+    var selectedColor = UIColor.red
+    var selectedColorHex = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         helpView.isHidden = true
         specifyStackView.isHidden = true
+        colorChangeStackView.isHidden = true
         if (groups.count == 0) {
             groups.append("other")
             specifyStackView.isHidden = false
+            colorChangeStackView.isHidden = false
         } else if (groups[groups.count - 1] != "other") {
                 groups.append("other")
         }
         startTimePicker.addTarget(self, action: #selector(NewGoalController.datePickerChanged), for: UIControlEvents.valueChanged)
-
+        groupPicker.selectRow(0, inComponent:0, animated:true)
     }
     
     func datePickerChanged() {
@@ -69,9 +80,12 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
             newGoal.rerun = pickerData[row]
         } else if groups[row] == "other" {
             specifyStackView.isHidden = false
+            colorChangeStackView.isHidden = false
         } else {
             specifyStackView.isHidden = true
+            colorChangeStackView.isHidden = true
             newGoal.group = groups[row]
+            newGoal.groupColor = groupColors[row]
         }
     }
     
@@ -80,11 +94,13 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
             newGoal.title = titleTextField.text!
             //print(newGoal.title)
         }
+       
         
         newGoal.startDate = startTimePicker.date as NSDate
         //print(newGoal.startDate)
         newGoal.endDate = endTimePicker.date as NSDate
         //print(newGoal.endDate)
+        
         
         if (!(countTextField.text?.isEmpty)!) {
             newGoal.count = Int32(countTextField.text!)!
@@ -94,12 +110,11 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         
         if (!(specifyTextField.text!.isEmpty) && specifyStackView.isHidden == false) {
             newGoal.group = specifyTextField.text!
+            newGoal.groupColor = selectedColorHex  
         }
-    
+        
         CoreDataHelper.saveGoal()
-        groups = CoreDataHelper.retrieveGroups()
-        ViewController.tableGoals.append(newGoal)
-        print(self.groups)
+
     }
     @IBAction func infoButton(_ sender: UIButton) {
         helpView.layer.borderColor = UIColor.lightGray.cgColor
@@ -121,6 +136,61 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
                 print("Save button tapped")
             }
         }
-        ViewController.goals = CoreDataHelper.retrieveGoals()
+    }
+    
+    // colorSelection Popover
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        // show popover box for iPhone and iPad both
+        return UIModalPresentationStyle.none
+    }
+    
+    func colorPickerDidColorSelected(selectedUIColor: UIColor, selectedHexColor: String) {
+        
+        // update color value within class variable
+        self.selectedColor = selectedUIColor
+        self.selectedColorHex = selectedHexColor
+        
+        
+        // set preview background to selected color
+        changeColorButton.backgroundColor = selectedUIColor
+    }
+    
+    private func showColorPicker(){
+        
+        // initialise color picker view controller
+        let colorPickerVc = storyboard?.instantiateViewController(withIdentifier: "sbColorPicker") as! ColorPickerViewController
+        
+        // set modal presentation style
+        colorPickerVc.modalPresentationStyle = .popover
+        
+        // set max. size
+        colorPickerVc.preferredContentSize = CGSize(width:265, height: 400)
+        
+        // set color picker deleagate to current view controller
+        // must write delegate method to handle selected color
+        colorPickerVc.colorPickerDelegate = self
+        
+        // show popover
+        if let popoverController = colorPickerVc.popoverPresentationController {
+            
+            // set source view
+            popoverController.sourceView = changeColorButton
+            
+            // show popover form button
+            popoverController.sourceRect = self.changeColorButton.bounds
+            
+            // show popover arrow at feasible direction
+            popoverController.permittedArrowDirections = UIPopoverArrowDirection.down
+            
+            // set popover delegate self
+            popoverController.delegate = self
+        }
+        
+        //show color popover
+        present(colorPickerVc, animated: true, completion: nil)
+    }
+    
+    @IBAction func changeColorButtonClicked(sender: UIButton) {
+        self.showColorPicker()
     }
 }

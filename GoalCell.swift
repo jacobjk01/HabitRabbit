@@ -15,6 +15,4 @@ class GoalCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var groupLabel: UILabel!
     @IBOutlet weak var groupColorBox: UIView!
-  
-    var tableViewGoals = [Goal]()
 }

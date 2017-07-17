@@ -13,7 +13,7 @@
         <!--Ib Calendar Data Source-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HabitTrack" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" id="BYZ-38-t0r" customClass="ViewController" customModule="HabitTrack" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -25,7 +25,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1a9-1p-Np6" userLabel="CalendarStackView">
                                 <rect key="frame" x="0.0" y="66" width="414" height="455"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="wsr-BL-pTc">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="wsr-BL-pTc" userLabel="WeekdayStackView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V2L-co-gIL">
@@ -96,7 +96,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomCell" id="Igl-4h-YCb" customClass="CustomCell" customModule="HabitTrack" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomCell" id="Igl-4h-YCb" userLabel="dayCell" customClass="CustomCell" customModule="HabitTrack" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="110" height="110"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -117,8 +117,8 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJe-vO-tT8">
-                                                            <rect key="frame" x="0.0" y="89" width="110" height="2"/>
+                                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJe-vO-tT8">
+                                                            <rect key="frame" x="0.0" y="79" width="110" height="2"/>
                                                             <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="2" id="wsh-Yf-yow"/>
@@ -127,13 +127,13 @@
                                                     </subviews>
                                                 </view>
                                                 <constraints>
-                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="top" secondItem="Igl-4h-YCb" secondAttribute="topMargin" constant="81" id="AgJ-51-tXj"/>
+                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" constant="25" id="FTh-ij-yRc"/>
                                                     <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="PEt-m8-PGD"/>
                                                     <constraint firstItem="YKa-3f-UgB" firstAttribute="centerY" secondItem="Igl-4h-YCb" secondAttribute="centerY" id="YWM-15-xId"/>
                                                     <constraint firstItem="MG7-sQ-2mO" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="cbA-Se-vQw"/>
-                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="leading" secondItem="Igl-4h-YCb" secondAttribute="leadingMargin" constant="-8" id="kYw-42-EyN"/>
                                                     <constraint firstItem="kJe-vO-tT8" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="qjZ-Ad-JuD"/>
                                                     <constraint firstItem="YKa-3f-UgB" firstAttribute="centerX" secondItem="Igl-4h-YCb" secondAttribute="centerX" id="s8N-Tc-24B"/>
+                                                    <constraint firstItem="kJe-vO-tT8" firstAttribute="leading" secondItem="Igl-4h-YCb" secondAttribute="leadingMargin" constant="-8" id="uxk-uk-RPH"/>
                                                 </constraints>
                                                 <connections>
                                                     <outlet property="dateLabel" destination="MG7-sQ-2mO" id="uWJ-B9-0Hv"/>
@@ -159,7 +159,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ja-zB-PA8">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ja-zB-PA8" userLabel="addGoalButton">
                                 <rect key="frame" x="364" y="28" width="30" height="30"/>
                                 <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -194,7 +194,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Complete 'blank' more to reach your goal." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENE-iq-W4g" userLabel="reachGoalLabel">
-                                                            <rect key="frame" x="52" y="24" width="240" height="20"/>
+                                                            <rect key="frame" x="52" y="24" width="323" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                             <nil key="textColor"/>

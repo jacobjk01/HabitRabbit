@@ -51,10 +51,23 @@ class CoreDataHelper {
             let groupResults = results.flatMap { (goal: Goal) in
                 return goal.group
             }
-                Array(Set(groupResults))
                 return groupResults
         } catch let error as NSError {
         print("Could not fetch \(error)")
+        }
+        return []
+    }
+    
+    static func retrieveGroupColors() -> [String] {
+        let fetchRequest = NSFetchRequest<Goal>(entityName: "Goal")
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            let groupResults = results.flatMap { (goal: Goal) in
+                return goal.groupColor
+            }
+            return groupResults
+        } catch let error as NSError {
+            print("Could not fetch \(error)")
         }
         return []
     }
