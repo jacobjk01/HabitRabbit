@@ -32,8 +32,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //ViewController.goals = CoreDataHelper.retrieveGoals()
-        //tableView.reloadData()
         
         monthLabel.text = today.monthAsString()
         goalInfoView.isHidden = true
@@ -41,18 +39,18 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-//        for i in goals {
-//            print(i.title)
-//            print(i.group)
-//            print(i.rerun)
-//            print(i.startDate)
-//            print(i.endDate)
-//            print(i.count)
-//        }
+
         setupCalendarView()
-        //reloadCalendar()
 
         goals = CoreDataHelper.retrieveGoals()
+        for i in goals {
+            print(i.title)
+            print(i.group)
+            print(i.rerun)
+            print(i.startDate)
+            print(i.endDate)
+            print(i.count)
+        }
     }
     
     func reloadCalendar() {
@@ -89,6 +87,7 @@ class ViewController: UIViewController {
 
     @IBAction func unwindToCalendar(_ segue: UIStoryboardSegue) {
         goals = CoreDataHelper.retrieveGoals()
+        calendarView.deselectAllDates()
     }
 }
 
@@ -137,13 +136,15 @@ extension ViewController: JTAppleCalendarViewDelegate {
         }
         
         // Setup Goals
+        
+        cell.dayGoals = []
+        
         var count = 0
         for goal in goals {
-            if date.isBetween(date: goal.startDate! as Date, andDate: goal.endDate! as Date) {
+            if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
                 cell.dayGoals.append(goal)
                 cell.goalDurationLine.isHidden = false
                 cell.goalDurationLine.backgroundColor = UIColor(hex: goal.groupColor!)
-                //cell.setNeedsDisplay()
                 count += 1
             }
         }
@@ -153,12 +154,15 @@ extension ViewController: JTAppleCalendarViewDelegate {
             cell.goalDurationLine.backgroundColor = UIColor.black
         }
         
+        print(date)
+        print(cell.dayGoals)
         return cell
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        guard let validCell = cell as? CustomCell else { return }
         
+        guard let validCell = cell as? CustomCell else { return }
+        print(validCell.dayGoals)
         validCell.selectedView.isHidden = false
         
         goalInfoView.isHidden = false
@@ -168,14 +172,18 @@ extension ViewController: JTAppleCalendarViewDelegate {
             goalInfoView.isHidden = true
         } else {
             for goal in validCell.dayGoals {
-                if date.isBetween(date: goal.startDate! as Date, andDate: goal.endDate! as Date) {
+                if (!validCell.dayGoals.contains(goal)) {
+                    let deleteIndex = validCell.dayGoals.index(of: goal)
+                    validCell.dayGoals.remove(at: deleteIndex!)
+                }
+                if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
                     tableGoals.append(goal)
                 }
             }
         }
         
         tableView.reloadData()
-        //print(validCell.dayGoals)
+        
         }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
@@ -217,6 +225,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             tableView.reloadData()
             goals = CoreDataHelper.retrieveGoals()
             calendarView.reloadData()
+            
+            print(goals)
         }
     }
 }

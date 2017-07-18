@@ -26,8 +26,9 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     
     var newGoal = CoreDataHelper.newGoal()
     let pickerData = ["none", "daily", "weekly", "monthly"]
-    var groups = Array(Set(CoreDataHelper.retrieveGroups()))
-    var groupColors = Array(Set(CoreDataHelper.retrieveGroupColors()))
+    var groupDict = CoreDataHelper.retrieveGroupDict()
+    var groups = CoreDataHelper.retrieveGroups()
+//    var groupColors = Array(Set(CoreDataHelper.retrieveGroupColors()))
     
     var currentGroup = ""
     var currentGroupColor = ""
@@ -40,12 +41,12 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         helpView.isHidden = true
         specifyStackView.isHidden = true
         colorChangeStackView.isHidden = true
-        if (groups.count == 0) {
-            groups.append("other")
+        if (groupDict.count == 0) {
+            groupDict["other"] = ""
             specifyStackView.isHidden = false
             colorChangeStackView.isHidden = false
-        } else if (groups[groups.count - 1] != "other") {
-                groups.append("other")
+        } else if groupDict["other"] == nil {
+            groupDict["other"] = ""
         }
         startTimePicker.addTarget(self, action: #selector(NewGoalController.datePickerChanged), for: UIControlEvents.valueChanged)
         groupPicker.selectRow(0, inComponent:0, animated:true)
@@ -85,7 +86,7 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
             specifyStackView.isHidden = true
             colorChangeStackView.isHidden = true
             newGoal.group = groups[row]
-            newGoal.groupColor = groupColors[row]
+            newGoal.groupColor = groupDict[newGoal.group!]
         }
     }
     
@@ -110,11 +111,13 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         
         if (!(specifyTextField.text!.isEmpty) && specifyStackView.isHidden == false) {
             newGoal.group = specifyTextField.text!
-            newGoal.groupColor = selectedColorHex  
+            newGoal.groupColor = selectedColorHex
+            groupDict[newGoal.group!] = newGoal.groupColor
         }
         
         CoreDataHelper.saveGoal()
 
+        
     }
     @IBAction func infoButton(_ sender: UIButton) {
         helpView.layer.borderColor = UIColor.lightGray.cgColor

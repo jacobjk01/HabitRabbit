@@ -16,12 +16,8 @@ extension Date {
         return df.string(from: self)
     }
     
-    func isBetween(date date1: Date, andDate date2: Date) -> Bool {
-        if (self == date1 || self == date2) {
-            return true
-        } else if (self > date1 && self < date2) {
-            return true
-        }
-        return false
+    func isBetween(date date1: NSDate, andDate date2: NSDate) -> Bool {
+        let newDate = date1.addingTimeInterval(-Double(60*60*24))
+        return newDate.compare(self).rawValue * self.compare(date2 as Date).rawValue >= 0
     }
 }

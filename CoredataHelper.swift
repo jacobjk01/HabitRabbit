@@ -44,26 +44,29 @@ class CoreDataHelper {
         return []
     }
     
+    static func retrieveGroupDict() -> [String:String] {
+        let fetchRequest = NSFetchRequest<Goal>(entityName: "Goal")
+        do {
+            let results = try managedContext.fetch(fetchRequest)
+            var groupResults: [String:String] = [:]
+            if (results.count != 0 ) {
+                for goal in results {
+                    groupResults[goal.group!] = goal.groupColor
+                }
+            }
+            return groupResults
+        } catch let error as NSError {
+        print("Could not fetch \(error)")
+        }
+        return [:]
+    }
+    
     static func retrieveGroups() -> [String] {
         let fetchRequest = NSFetchRequest<Goal>(entityName: "Goal")
         do {
             let results = try managedContext.fetch(fetchRequest)
             let groupResults = results.flatMap { (goal: Goal) in
                 return goal.group
-            }
-                return groupResults
-        } catch let error as NSError {
-        print("Could not fetch \(error)")
-        }
-        return []
-    }
-    
-    static func retrieveGroupColors() -> [String] {
-        let fetchRequest = NSFetchRequest<Goal>(entityName: "Goal")
-        do {
-            let results = try managedContext.fetch(fetchRequest)
-            let groupResults = results.flatMap { (goal: Goal) in
-                return goal.groupColor
             }
             return groupResults
         } catch let error as NSError {
