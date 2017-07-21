@@ -13,8 +13,11 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var goalInfoView: UIView!
-    @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var monthLabel: UILabel!
+    @IBOutlet weak var goForwardButton: UIButton!
+    @IBOutlet weak var goBackwardButton: UIButton!
+
     
     let formatter = DateFormatter()
     var goals = [Goal]() {
@@ -29,10 +32,12 @@ class ViewController: UIViewController {
     }
     var today = Date()
     let refreshControl = UIRefreshControl()
+    var currentSection = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
         goalInfoView.isHidden = true
         
@@ -60,6 +65,7 @@ class ViewController: UIViewController {
         }
         self.calendarView.reloadData()
         self.tableView.reloadData()
+        currentSection = calendarView.currentSection()!
     }
     
     func configureCalendar() {
@@ -68,16 +74,14 @@ class ViewController: UIViewController {
     
     }
     override func viewDidAppear(_ animated: Bool) {
-//        ViewController.goals = CoreDataHelper.retrieveGoals()
-//        
-//        goalInfoView.isHidden = true
-//        reloadCalendar()
+        goals = CoreDataHelper.retrieveGoals()
         calendarView.reloadData()
      }
     
     func setupCalendarView() {
         calendarView.minimumLineSpacing = 0
         calendarView.minimumInteritemSpacing = 0
+        calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
     }
 
     override func didReceiveMemoryWarning() {
@@ -89,6 +93,12 @@ class ViewController: UIViewController {
         goals = CoreDataHelper.retrieveGoals()
         calendarView.deselectAllDates()
     }
+    @IBAction func previousMonthClicked(_ sender: UIButton) {
+        calendarView.scrollToSegment(.previous)
+    }
+    @IBAction func nextMonthClicked(_ sender: UIButton) {
+        calendarView.scrollToSegment(.next)
+    }
 }
 
 extension ViewController: JTAppleCalendarViewDataSource{
@@ -98,12 +108,13 @@ extension ViewController: JTAppleCalendarViewDataSource{
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         
-        let startDate = formatter.date(from: "2017 07 01")! // You can use date generated from a formatter
-        let endDate = Date()                                // You can also use dates created from this function
+        let startDate = today // You can use date generated from a formatter
+        let endDate = Calendar.current.date(byAdding: .month, value: 12, to: Date())
+                        // You can also use dates created from this function
 //        let parameters = ConfigurationParameters(startDate: startDate, endDate: endDate)
         
             let parameters = ConfigurationParameters(startDate: startDate,
-                                                         endDate: endDate,
+                                                         endDate: endDate!,
                                                  numberOfRows: 6, // Only 1, 2, 3, & 6 are allowed
             calendar: Calendar.current,
             generateInDates: .forAllMonths,
@@ -117,7 +128,8 @@ extension ViewController: JTAppleCalendarViewDataSource{
 extension ViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
         let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
-            
+        
+        cell.selectedView.isHidden = true
         // Setup Cell text
         cell.dateLabel.text = cellState.text
         cell.selectedView.layer.cornerRadius = cell.selectedView.frame.width/2
@@ -141,13 +153,19 @@ extension ViewController: JTAppleCalendarViewDelegate {
         
         var count = 0
         for goal in goals {
-            if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
+            if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {
                 cell.dayGoals.append(goal)
                 cell.goalDurationLine.isHidden = false
-                cell.goalDurationLine.backgroundColor = UIColor(hex: goal.groupColor!)
                 count += 1
+                
+                if let color = goal.groupColor {
+                    cell.goalDurationLine.backgroundColor = UIColor(hex: color)
+                } else {
+                    cell.goalDurationLine.backgroundColor = UIColor.black
+                }
             }
         }
+
         
         if count == 0 {
             cell.goalDurationLine.isHidden = true
@@ -172,14 +190,11 @@ extension ViewController: JTAppleCalendarViewDelegate {
             goalInfoView.isHidden = true
         } else {
             for goal in validCell.dayGoals {
-                if (!validCell.dayGoals.contains(goal)) {
-                    let deleteIndex = validCell.dayGoals.index(of: goal)
-                    validCell.dayGoals.remove(at: deleteIndex!)
-                }
-                if date.isBetween(date: goal.startDate!, andDate: goal.endDate!) {
+                if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {
                     tableGoals.append(goal)
                 }
             }
+            
         }
         
         tableView.reloadData()
@@ -190,6 +205,12 @@ extension ViewController: JTAppleCalendarViewDelegate {
         guard let validCell = cell as? CustomCell else { return }
         validCell.selectedView.isHidden = true
         tableGoals = []
+    }
+
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        formatter.dateFormat = "MMMM yyyy"
+        monthLabel.text = formatter.string(from: (visibleDates.monthDates.first?.date)!)
+        calendarView.reloadData()
     }
 }
 
@@ -210,7 +231,11 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         cell.goalLabel.text = goal.title
         cell.descriptionLabel.text = "Complete your task \(goal.count) more times to reach your goal"
         cell.groupLabel.text = goal.group
-        cell.groupColorBox.backgroundColor = UIColor(hex: goal.groupColor!)
+        if let color = goal.groupColor {
+            cell.groupColorBox.backgroundColor = UIColor(hex: color)
+        } else {
+            cell.groupColorBox.backgroundColor = UIColor.black
+        }
         
         return cell
     }
@@ -221,7 +246,16 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             // 3
             let deletedGoal = tableGoals[indexPath.row]
             tableGoals.remove(at: indexPath.row)
+            if (deletedGoal.repeatStatus == "original") {
+                for goal in goals {
+                    // need a better if statement here
+                    if (goal.repeatStatus == "copy" && goal.title == deletedGoal.title) {
+                        CoreDataHelper.delete(goal: goal)
+                    }
+                }
+            }
             CoreDataHelper.delete(goal: deletedGoal)
+            
             tableView.reloadData()
             goals = CoreDataHelper.retrieveGoals()
             calendarView.reloadData()

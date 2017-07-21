@@ -49,11 +49,11 @@ class CoreDataHelper {
         do {
             let results = try managedContext.fetch(fetchRequest)
             var groupResults: [String:String] = [:]
-            if (results.count != 0 ) {
                 for goal in results {
-                    groupResults[goal.group!] = goal.groupColor
+                    if (goal.group != nil) {
+                        groupResults[goal.group!] = goal.groupColor
+                    }
                 }
-            }
             return groupResults
         } catch let error as NSError {
         print("Could not fetch \(error)")
@@ -75,3 +75,4 @@ class CoreDataHelper {
         return []
     }
 }
+
