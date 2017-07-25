@@ -8,8 +8,10 @@
 
 import Foundation
 import UIKit
+import Eureka
+import ColorPickerRow
 
-class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UIPopoverPresentationControllerDelegate, ColorPickerDelegate {
+class NewGoalController:  FormViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet weak var startTimePicker: UIDatePicker!
     @IBOutlet weak var endTimePicker: UIDatePicker!
@@ -30,36 +32,259 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     var pickerData = ["none", "daily", "weekly", "monthly"]
     var groupDict = CoreDataHelper.retrieveGroupDict()
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
-//    var groupColors = Array(Set(CoreDataHelper.retrieveGroupColors()))
     
     var selectedColor = UIColor.black
     var selectedColorHex = "FF0000"
+    var colorList:[String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if (groups.count) == 0 {
-            groupDict = [:]
+        
+        if groups.count == 0 {
+            groups.append("New...")
         }
-        helpView.isHidden = true
-        specifyStackView.isHidden = true
-        colorChangeStackView.isHidden = true
-        if (groups.count == 0) {
-            groups.append("other")
-            specifyStackView.isHidden = false
-            colorChangeStackView.isHidden = false
-        } else if groups[groups.count - 1] != "other" {
-            groups.append("other")
+        else if groups[groups.count - 1] != "New..." {
+            groups.append("New...")
         }
-        startTimePicker.addTarget(self, action: #selector(NewGoalController.datePickerChanged), for: UIControlEvents.valueChanged)
-        groupPicker.selectRow(0, inComponent:0, animated:true)
+        
+        //setup
+        form +++ Section("New Goal")
+            <<< TextRow("Title") { row in
+                row.title = "Title"
+                row.placeholder = "Enter title here"
+                row.add(rule: RuleRequired())
+            }
+        +++ Section("Date")
+            <<< DateInlineRow("Start Date") {
+                $0.title = $0.tag
+                $0.value = Date()
+            }
+            <<< DateInlineRow("End Date") {
+                $0.title = $0.tag
+                $0.value = Date()
+            }
+        +++ Section(header: "Count", footer: "Count refers to how many times you want to complete your goal in your selected duration. For example, you could indicate that you want to work out three times in this week")
+            <<< PushRow<String>("Count Duration") {
+                $0.title = $0.tag
+                $0.value = "Total"
+                $0.selectorTitle = "Select a Duration"
+                $0.options = ["Daily", "Weekly", "Monthly", "Total"]
+                $0.add(rule: RuleRequired())
+            }
+            <<< IntRow("Count") {
+                $0.title = $0.tag
+                $0.add(rule: RuleRequired())
+            }
+        +++ Section("Repeat")
+            <<< PushRow<String>("Repeat Interval") {
+                $0.title = $0.tag
+                $0.value = "None"
+                $0.selectorTitle = "Select a Repeat Interval"
+                $0.options = ["None", "Daily", "Weekdays", "Weekends", "Weekly", "Every Other Week", "Monthly"]
+                $0.add(rule: RuleRequired())
+            }
+            <<< PushRow<String>("Repeat End Date") {
+                $0.title = $0.tag
+                $0.value = "One Week Later"
+                $0.selectorTitle = "Select a Repeat End"
+                $0.options = ["One Week Later", "One Month Later", "Six Months Later", "One Year Later", "Custom..."]
+            }
+        
+            <<< DateInlineRow("Custom Repeat End Date") {
+                $0.title = $0.tag
+                $0.value = Date()
+                $0.hidden = Condition.function(["Repeat End Date"], { form in
+                    return !((form.rowBy(tag: "Repeat End Date") as? PushRow)?.value == "Custom...")
+                })
+            }
+        +++ Section("Groups")
+            <<< PushRow<String> ("Group"){
+                $0.title = $0.tag
+                $0.value = ""
+                $0.selectorTitle = "Select Your Goal's Category"
+                $0.options = groups
+                $0.add(rule: RuleRequired())
+            }
+            
+            <<< TextRow("New Group Name") { row in
+                row.title = "New Group Name"
+                row.value = ""
+                row.placeholder = "Goal Category"
+                row.hidden = Condition.function(["Group"], { form in
+                    return !((form.rowBy(tag: "Group") as? PushRow)?.value == "New...")
+                })
+            }
+            
+            <<< ColorPickerRow("New Group Color") { row in
+                row.title = "New Group Color"
+                row.value = UIColor.blue
+                row.isCircular = true
+                row.showsPaletteNames = false
+                row.showsCurrentSwatch = true
+                row.hidden = Condition.function(["Group"], { form in
+                    return !((form.rowBy(tag: "Group") as? PushRow)?.value == "New...")
+                })
+            }
+            
+            +++ MultivaluedSection(multivaluedOptions: [.Insert, .Delete], header: "Reminders") {
+                $0.addButtonProvider = { section in
+                    return ButtonRow(){
+                        $0.title = "Add New Reminder"
+                    }
+                }
+                $0.multivaluedRowToInsertAt = { index in
+                    return TimeRow() {
+                        let gregorian = Calendar(identifier: .gregorian)
+                        let now = Date()
+                        var components = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: now)
+                        
+                        // Change the time to 9:30:00 in your locale
+                        components.hour = 12
+                        components.minute = 00
+                        components.second = 00
+                        
+                        let defaultTime = gregorian.date(from: components)!
+                        $0.value = defaultTime
+                        $0.title = "Reminder:"
+                    }
+                }
+            }
+
+        +++ Section("Submit")
+            <<< ButtonRow ("Save") {
+                $0.title = $0.tag
+            }.onCellSelection({ (cell, row) in
+                let formValues = self.form.values()
+                
+                self.newGoal.title = formValues["Title"] as? String
+                
+                self.newGoal.startDate = formValues["Start Date"] as? NSDate
+                self.newGoal.endDate = formValues["End Date"] as? NSDate
+                
+                self.newGoal.countDuration = formValues["Count Duration"] as? String
+                self.newGoal.count = Int64(formValues["Count"] as! Int)
+                
+                let group = formValues["Group"] as? String
+                if group != "New..." {
+                    self.newGoal.group = group
+                    self.newGoal.groupColor = self.groupDict[group!]
+                } else {
+                    self.newGoal.group = formValues["New Group Name"] as? String
+                    self.newGoal.groupColor = formValues["New Group Color"] as? String
+                    self.groups.append(self.newGoal.group!)
+                }
+                
+                self.newGoal.rerun = formValues["Repeat Interval"] as? String
+                if formValues["Repeat End Date"] as? String != "Custom..." {
+                    let repeatEndDate = formValues["Repeat End Date"] as! String
+                    
+                    switch repeatEndDate {
+                        case "One Week Later":
+                            let endRepeat = self.newGoal.endDate?.addingTimeInterval(60*60*24*7)
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
+                        case "One Month Later":
+                            let endRepeat = Calendar.current.date(byAdding: .month, value: 1, to: self.newGoal.endDate! as Date)
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat!)
+                        case "One Year Later":
+                            let endRepeat = Calendar.current.date(byAdding: .year, value: 1, to: self.newGoal.endDate as! Date)
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat!)
+                    default:
+                            break
+                    }
+                } else {
+                    self.newGoal.repeatEndDate = formValues["Custom Repeat End Date"] as? NSDate
+                }
+                
+                
+                self.performSegue(withIdentifier: "saveGoal", sender: nil)
+                CoreDataHelper.saveGoal()
+            })
     }
     
-    func datePickerChanged() {
-        
-        repeatPicker.selectRow(0, inComponent: 0, animated: true)
-        endTimePicker.minimumDate = startTimePicker.date
-        repeatEndDatePicker.minimumDate = endTimePicker.date
+    func repeatCreateGoal (repeatInterval: String, repeatEndDate: Date) {
+        var tempGoal = newGoal
+        switch repeatInterval {
+            case "Daily":
+                while tempGoal.endDate?.compare(repeatEndDate) == ComparisonResult.orderedAscending {
+                     let repeatGoal = goalDayLater(goal: tempGoal)
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+            case "Weekdays":
+                while (tempGoal.endDate!.compare(repeatEndDate) == ComparisonResult.orderedAscending && (tempGoal.startDate! as Date).dayNumberOfWeek()! > 0 && (tempGoal.startDate! as Date).dayNumberOfWeek()! < 6) {
+                    let repeatGoal = goalDayLater(goal: tempGoal)
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+            case "Weekends":
+                while (tempGoal.endDate!.compare(repeatEndDate) == ComparisonResult.orderedAscending && (tempGoal.startDate! as Date).dayNumberOfWeek()! == 0 || (tempGoal.startDate! as Date).dayNumberOfWeek()! == 6) {
+                    let repeatGoal = goalDayLater(goal: tempGoal)
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+            case "Weekly":
+                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                    let repeatGoal = goalWeekLater(goal: tempGoal)
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+            case "Every Other Week":
+                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                    let repeatGoal = goalWeekLater(goal: goalWeekLater(goal: tempGoal))
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+            case "Monthly":
+                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                    let repeatGoal = goalMonthLater(goal: tempGoal)
+                    CoreDataHelper.saveGoal()
+                    tempGoal = repeatGoal
+                }
+                
+        default:
+            break
+        }
     }
+    
+    func goalDayLater (goal: Goal) -> Goal {
+        let newGoal = CoreDataHelper.newGoal()
+        newGoal.title = goal.title
+        newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24)
+        newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24)
+        newGoal.countDuration = goal.countDuration
+        newGoal.count = goal.count
+        newGoal.group = goal.group
+        newGoal.groupColor = goal.groupColor
+        // insert reminders initialization here
+        return newGoal
+    }
+    
+    func goalWeekLater (goal: Goal) -> Goal{
+        let newGoal = CoreDataHelper.newGoal()
+        newGoal.title = goal.title
+        newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*7)
+        newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*7)
+        newGoal.countDuration = goal.countDuration
+        newGoal.count = goal.count
+        newGoal.group = goal.group
+        newGoal.groupColor = goal.groupColor
+        // insert reminders initialization here
+        return newGoal
+    }
+    
+    func goalMonthLater (goal: Goal) -> Goal {
+        let newGoal = CoreDataHelper.newGoal()
+        newGoal.title = goal.title
+        newGoal.startDate = Calendar.current.date(byAdding: .month, value: 1, to: (goal.startDate as Date?)!) as NSDate?
+        newGoal.endDate = Calendar.current.date(byAdding: .month, value: 1, to: (goal.endDate as Date?)!) as NSDate?
+        newGoal.countDuration = goal.countDuration
+        newGoal.count = goal.count
+        newGoal.group = goal.group
+        newGoal.groupColor = goal.groupColor
+        // insert reminders initialization here
+        return newGoal
+    }
+    
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -121,7 +346,7 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         newGoal.endDate = endTimePicker.date as NSDate
         
         if (!(countTextField.text?.isEmpty)!) {
-            newGoal.count = Int32(countTextField.text!)!
+            newGoal.count = IntMax(countTextField.text!)!
         }
         
         if (!(specifyTextField.text!.isEmpty) && specifyStackView.isHidden == false) {
@@ -200,7 +425,7 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         helpView.isHidden = true
     }
     
-    @IBAction func cancelGoal(_ sender: UIButton) {
+    @IBAction func cancelGoal(_ sender: Any) {
         CoreDataHelper.delete(goal: newGoal)
     }
     
@@ -212,61 +437,5 @@ class NewGoalController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
                 print("Save button tapped")
             }
         }
-    }
-    
-    // colorSelection Popover
-    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        // show popover box for iPhone and iPad both
-        return UIModalPresentationStyle.none
-    }
-    
-    func colorPickerDidColorSelected(selectedUIColor: UIColor, selectedHexColor: String) {
-        
-        // update color value within class variable
-        self.selectedColor = selectedUIColor
-        self.selectedColorHex = selectedHexColor
-        
-        
-        // set preview background to selected color
-        changeColorButton.backgroundColor = selectedUIColor
-    }
-    
-    private func showColorPicker(){
-        
-        // initialise color picker view controller
-        let colorPickerVc = storyboard?.instantiateViewController(withIdentifier: "sbColorPicker") as! ColorPickerViewController
-        
-        // set modal presentation style
-        colorPickerVc.modalPresentationStyle = .popover
-        
-        // set max. size
-        colorPickerVc.preferredContentSize = CGSize(width:265, height: 400)
-        
-        // set color picker deleagate to current view controller
-        // must write delegate method to handle selected color
-        colorPickerVc.colorPickerDelegate = self
-        
-        // show popover
-        if let popoverController = colorPickerVc.popoverPresentationController {
-            
-            // set source view
-            popoverController.sourceView = changeColorButton
-            
-            // show popover form button
-            popoverController.sourceRect = self.changeColorButton.bounds
-            
-            // show popover arrow at feasible direction
-            popoverController.permittedArrowDirections = UIPopoverArrowDirection.down
-            
-            // set popover delegate self
-            popoverController.delegate = self
-        }
-        
-        //show color popover
-        present(colorPickerVc, animated: true, completion: nil)
-    }
-    
-    @IBAction func changeColorButtonClicked(sender: UIButton) {
-        self.showColorPicker()
     }
 }
