@@ -12,24 +12,17 @@ import JTAppleCalendar
 class ViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var goForwardButton: UIButton!
     @IBOutlet weak var goBackwardButton: UIButton!
 
     
     let formatter = DateFormatter()
-    var goals = [Goal]() {
-        didSet {
-            //calendarView.reloadData()
-        }
-    }
-    var tableGoals = [Goal]() {
-        didSet {
-            //tableView.reloadData()
-        }
-    }
+    static var goals = [Goal]()
+    static var tableGoals = [Goal]()
+    
     var today = Date()
+    var todayGoals = [Goal]()
     let refreshControl = UIRefreshControl()
     var currentSection = 0
     
@@ -38,16 +31,11 @@ class ViewController: UIViewController {
         
         calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
-        tableView.isHidden = true
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
 
         setupCalendarView()
 
-        goals = CoreDataHelper.retrieveGoals()
-        for i in goals {
+        ViewController.goals = CoreDataHelper.retrieveGoals()
+        for i in ViewController.goals {
             print(i.title)
             print(i.group)
             print(i.rerun)
@@ -55,7 +43,20 @@ class ViewController: UIViewController {
             print(i.endDate)
             print(i.count)
         }
+        
+//        let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+//        self.tableView.addGestureRecognizer(gestureRecognizer)
     }
+    
+//    @IBAction func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+//        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+//            
+//            let translation = gestureRecognizer.translation(in: self.view)
+//            // note: 'view' is optional and need to be unwrapped
+//            gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y + translation.y)
+//            gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
+//        }
+//    }
     
     func reloadCalendar() {
         //goals = CoreDataHelper.retrieveGoals()
@@ -63,7 +64,6 @@ class ViewController: UIViewController {
             self.refreshControl.endRefreshing()
         }
         self.calendarView.reloadData()
-        self.tableView.reloadData()
         currentSection = calendarView.currentSection()!
     }
     
@@ -73,7 +73,7 @@ class ViewController: UIViewController {
     
     }
     override func viewDidAppear(_ animated: Bool) {
-        goals = CoreDataHelper.retrieveGoals()
+        ViewController.goals = CoreDataHelper.retrieveGoals()
         calendarView.reloadData()
      }
     
@@ -89,7 +89,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func unwindToCalendar(_ segue: UIStoryboardSegue) {
-        goals = CoreDataHelper.retrieveGoals()
+        ViewController.goals = CoreDataHelper.retrieveGoals()
         calendarView.deselectAllDates()
     }
     @IBAction func previousMonthClicked(_ sender: UIButton) {
@@ -97,6 +97,11 @@ class ViewController: UIViewController {
     }
     @IBAction func nextMonthClicked(_ sender: UIButton) {
         calendarView.scrollToSegment(.next)
+    }
+    
+    @IBAction func toToday(_ sender: UIBarButtonItem) {
+        print(todayGoals)
+        ViewController.tableGoals = todayGoals
     }
 }
 
@@ -151,7 +156,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
         cell.dayGoals = []
         
         var count = 0
-        for goal in goals {
+        for goal in ViewController.goals {
             if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {
                 cell.dayGoals.append(goal)
                 cell.goalDurationLine.isHidden = false
@@ -161,6 +166,9 @@ extension ViewController: JTAppleCalendarViewDelegate {
                     cell.goalDurationLine.backgroundColor = UIColor(hex: color)
                 } else {
                     cell.goalDurationLine.backgroundColor = UIColor.black
+                }
+                if currentDateString == cellStateDateString {
+                    todayGoals.append(goal)
                 }
             }
         }
@@ -182,28 +190,22 @@ extension ViewController: JTAppleCalendarViewDelegate {
         print(validCell.dayGoals)
         validCell.selectedView.isHidden = false
         
-        tableView.isHidden = false
-        tableGoals = []
+        ViewController.tableGoals = []
         
-        if validCell.dayGoals.count == 0 {
-            tableView.isHidden = true
-        } else {
+        if validCell.dayGoals.count != 0 {
             for goal in validCell.dayGoals {
                 if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {
-                    tableGoals.append(goal)
+                    ViewController.tableGoals.append(goal)
                 }
             }
-            
         }
         
-        tableView.reloadData()
-        
-        }
+    }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         guard let validCell = cell as? CustomCell else { return }
         validCell.selectedView.isHidden = true
-        tableGoals = []
+        ViewController.tableGoals = []
     }
 
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
@@ -211,57 +213,59 @@ extension ViewController: JTAppleCalendarViewDelegate {
         monthLabel.text = formatter.string(from: (visibleDates.monthDates.first?.date)!)
         calendarView.reloadData()
     }
+    
+    
 }
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableGoals.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "GoalCell") as! GoalCell
-        
-        //print(ViewController.tableGoals)
-        
-        let row = indexPath.row
-        let goal = tableGoals[row]
-        
-        cell.goalLabel.text = goal.title
-        cell.descriptionLabel.text = "Complete your task \(goal.count) more times to reach your goal"
-        cell.groupLabel.text = goal.group
-        if let color = goal.groupColor {
-            cell.groupColorBox.backgroundColor = UIColor(hex: color)
-        } else {
-            cell.groupColorBox.backgroundColor = UIColor.black
-        }
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        // 2
-        if editingStyle == .delete {
-            // 3
-            let deletedGoal = tableGoals[indexPath.row]
-            tableGoals.remove(at: indexPath.row)
-            if (deletedGoal.repeatStatus == "original") {
-                for goal in goals {
-                    // need a better if statement here
-                    if (goal.repeatStatus == "copy" && goal.title == deletedGoal.title) {
-                        CoreDataHelper.delete(goal: goal)
-                    }
-                }
-            }
-            CoreDataHelper.delete(goal: deletedGoal)
-            
-            tableView.reloadData()
-            goals = CoreDataHelper.retrieveGoals()
-            calendarView.reloadData()
-            
-            print(goals)
-        }
-    }
-}
-
-
+//extension ViewController: UITableViewDataSource, UITableViewDelegate {
+//    
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return ViewController.tableGoals.count
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "GoalCell") as! GoalCell
+//        
+//        //print(ViewController.tableGoals)
+//        
+//        let row = indexPath.row
+//        let goal = ViewController.tableGoals[row]
+//        
+//        cell.goalLabel.text = goal.title
+//        cell.descriptionLabel.text = "Complete your task \(goal.count) more times to reach your goal"
+//        cell.groupLabel.text = goal.group
+//        if let color = goal.groupColor {
+//            cell.groupColorBox.backgroundColor = UIColor(hex: color)
+//        } else {
+//            cell.groupColorBox.backgroundColor = UIColor.black
+//        }
+//        
+//        return cell
+//    }
+//    
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+//        // 2
+//        if editingStyle == .delete {
+//            // 3
+//            let deletedGoal = ViewController.tableGoals[indexPath.row]
+//            ViewController.tableGoals.remove(at: indexPath.row)
+//            if (deletedGoal.repeatStatus == "original") {
+//                for goal in goals {
+//                    // need a better if statement here
+//                    if (goal.repeatStatus == "copy" && goal.title == deletedGoal.title) {
+//                        CoreDataHelper.delete(goal: goal)
+//                    }
+//                }
+//            }
+//            CoreDataHelper.delete(goal: deletedGoal)
+//            
+//            tableView.reloadData()
+//            goals = CoreDataHelper.retrieveGoals()
+//            calendarView.reloadData()
+//            
+//            print(goals)
+//        }
+//    }
+//}
+//
+//
