@@ -25,12 +25,11 @@
                     <navigationItem key="navigationItem" title="New Goal" id="MrS-sx-9Ir">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Mlt-rV-TL7">
                             <connections>
-                                <action selector="cancelGoal:" destination="UVg-Up-lpX" id="p4I-Iy-C4d"/>
+                                <action selector="cancelGoal:" destination="UVg-Up-lpX" id="dv8-Um-lju"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="QXk-hG-EVx" kind="show" identifier="saveGoal" id="TsZ-8c-0hV"/>
                         <segue destination="aCp-BO-TUY" kind="unwind" identifier="unwindToCalendar" unwindAction="unwindToCalendar:" id="DmV-Qa-0Q5"/>
                     </connections>
                 </viewController>
@@ -38,65 +37,6 @@
                 <exit id="aCp-BO-TUY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2748" y="420.53973013493254"/>
-        </scene>
-        <!--Main-->
-        <scene sceneID="gTY-fT-sJR">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Main" id="QXk-hG-EVx" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DRO-KZ-O3w" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3366" y="237"/>
-        </scene>
-        <!--Color Picker View Controller-->
-        <scene sceneID="yab-Fs-rXD">
-            <objects>
-                <viewController storyboardIdentifier="sbColorPicker" id="bto-5U-4RN" customClass="ColorPickerViewController" customModule="HabitTrack" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="zNy-NJ-R4D"/>
-                        <viewControllerLayoutGuide type="bottom" id="8FU-cm-VAE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hIP-Ed-Bc2">
-                        <rect key="frame" x="0.0" y="0.0" width="273" height="431"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LwP-7f-sPx">
-                                <rect key="frame" x="8" y="8" width="257" height="415"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="val-GC-KI4">
-                                    <size key="itemSize" width="24" height="24"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ColorCell" id="8uy-SA-GbH">
-                                        <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="8FU-cm-VAE" firstAttribute="top" secondItem="LwP-7f-sPx" secondAttribute="bottom" constant="8" id="Wo6-6G-TIT"/>
-                            <constraint firstItem="LwP-7f-sPx" firstAttribute="top" secondItem="hIP-Ed-Bc2" secondAttribute="top" constant="8" id="bwV-Mg-0CH"/>
-                            <constraint firstItem="LwP-7f-sPx" firstAttribute="leading" secondItem="hIP-Ed-Bc2" secondAttribute="leading" constant="8" id="nbd-Gx-T1X"/>
-                            <constraint firstAttribute="trailing" secondItem="LwP-7f-sPx" secondAttribute="trailing" constant="8" id="pbo-eC-TSl"/>
-                        </constraints>
-                    </view>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="273" height="431"/>
-                    <connections>
-                        <outlet property="colorCollectionView" destination="LwP-7f-sPx" id="b7j-bm-Clh"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dmQ-e4-ZS1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3552.8000000000002" y="615.74212893553226"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="BVJ-lQ-XOh">

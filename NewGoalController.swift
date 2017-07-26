@@ -12,21 +12,6 @@ import Eureka
 import ColorPickerRow
 
 class NewGoalController:  FormViewController {
-
-    @IBOutlet weak var startTimePicker: UIDatePicker!
-    @IBOutlet weak var endTimePicker: UIDatePicker!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var countTextField: UITextField!
-    @IBOutlet weak var repeatPicker: UIPickerView!
-    @IBOutlet weak var groupPicker: UIPickerView!
-    @IBOutlet weak var specifyStackView: UIStackView!
-    @IBOutlet weak var specifyTextField: UITextField!
-    @IBOutlet weak var helpView: UIView!
-    @IBOutlet weak var changeColorButton: UIButton!
-    @IBOutlet weak var colorChangeStackView: UIStackView!
-    @IBOutlet weak var repeatEndDatePicker: UIDatePicker!
-    
     
     var newGoal = CoreDataHelper.newGoal()
     var groupDict = CoreDataHelper.retrieveGroupDict()
@@ -62,11 +47,23 @@ class NewGoalController:  FormViewController {
             <<< DateInlineRow("Start Date") {
                 $0.title = $0.tag
                 $0.value = Date()
-            }
+            }.onChange({ (DateInlineRow) in
+                let endDateRow: DateInlineRow = self.form.rowBy(tag: "End Date")!
+                if endDateRow.value?.compare(DateInlineRow.value!) == ComparisonResult.orderedAscending {
+                    DateInlineRow.value = endDateRow.value
+                    DateInlineRow.updateCell()
+                }
+            })
             <<< DateInlineRow("End Date") {
                 $0.title = $0.tag
                 $0.value = Date()
-            }
+            }.onChange({ (DateInlineRow) in
+                let startDateRow: DateInlineRow = self.form.rowBy(tag: "Start Date")!
+                if startDateRow.value?.compare(DateInlineRow.value!) == ComparisonResult.orderedDescending {
+                    DateInlineRow.value = startDateRow.value
+                    DateInlineRow.updateCell()
+                }
+            })
         +++ Section(header: "Count", footer: "Count refers to how many times you want to complete your goal in your selected duration. For example, you could indicate that you want to work out three times in this week")
             <<< PushRow<String>("Count Duration") {
                 $0.title = $0.tag
@@ -239,7 +236,9 @@ class NewGoalController:  FormViewController {
                             break
                     }
                 } else if formValues["Repeat Interval"] as? String != "None" {
-                    self.newGoal.repeatEndDate = formValues["Custom Repeat End Date"] as? NSDate
+                    let endRepeat = formValues["Custom Repeat End Date"] as? NSDate
+                    self.newGoal.repeatEndDate = endRepeat
+                    self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
                 }
                 self.performSegue(withIdentifier: "unwindToCalendar", sender: nil)
                 CoreDataHelper.saveGoal()
@@ -413,7 +412,7 @@ class NewGoalController:  FormViewController {
     }
     
     func goalAtWeekend (goal:Goal) -> Goal {
-        var newGoal = CoreDataHelper.newGoal()
+        let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate
         newGoal.endDate = goal.endDate
@@ -430,84 +429,7 @@ class NewGoalController:  FormViewController {
         return newGoal
     }
     
-    
-    @IBAction func submitButtonPressed(_ sender: Any) {
-        guard let title = titleTextField.text else { return }
-        newGoal.title = titleTextField.text!
-        
-        newGoal.startDate = startTimePicker.date as NSDate
-        newGoal.endDate = endTimePicker.date as NSDate
-        
-        if (!(countTextField.text?.isEmpty)!) {
-            newGoal.count = IntMax(countTextField.text!)!
-        }
-        
-        if (!(specifyTextField.text!.isEmpty) && specifyStackView.isHidden == false) {
-            newGoal.group = specifyTextField.text!
-            groupDict[newGoal.group!] = newGoal.groupColor
-        }
-        
-        newGoal.repeatStatus = "original"
-        
-        // if the repeat is weekly add seven to each and continually create goals with same parameters until end of year
-        // will also have to change delete to delete all of these events.
-        
-        var tempStart = newGoal.startDate
-        var tempEnd = newGoal.endDate
-        
-        if (newGoal.rerun == "weekly") {
-            while (tempStart?.compare(repeatEndDatePicker.date) == ComparisonResult.orderedAscending) {
-                let repeatGoal = CoreDataHelper.newGoal()
-                repeatGoal.startDate = tempStart?.addingTimeInterval(Double(60*60*24*7))
-                repeatGoal.endDate = tempEnd?.addingTimeInterval(Double(60*60*24*7))
-                repeatGoal.group = newGoal.group
-                repeatGoal.count = newGoal.count
-                repeatGoal.groupColor = newGoal.groupColor
-                repeatGoal.repeatStatus = "copy"
-                repeatGoal.title = newGoal.title
-                tempStart = repeatGoal.startDate
-                tempEnd = repeatGoal.endDate
-                CoreDataHelper.saveGoal()
-            }
-        } else if (newGoal.rerun == "daily") {
-            while (tempStart?.compare(repeatEndDatePicker.date) == ComparisonResult.orderedAscending) {
-                let repeatGoal = CoreDataHelper.newGoal()
-                repeatGoal.startDate = tempStart?.addingTimeInterval(Double(60*60*24))
-                repeatGoal.endDate = tempEnd?.addingTimeInterval(Double(60*60*24))
-                repeatGoal.group = newGoal.group
-                repeatGoal.count = newGoal.count
-                repeatGoal.groupColor = newGoal.groupColor
-                repeatGoal.repeatStatus = "copy"
-                repeatGoal.title = newGoal.title
-                tempStart = repeatGoal.startDate
-                tempEnd = repeatGoal.endDate
-                CoreDataHelper.saveGoal()
-            }
-        } else if (newGoal.rerun == "monthly") {
-            while (tempStart?.compare(repeatEndDatePicker.date) == ComparisonResult.orderedAscending) {
-                let repeatGoal = CoreDataHelper.newGoal()
-                
-                //sketchy casting
-                let startNextMonth = Calendar.current.date(byAdding: .month, value: 1, to: tempStart! as Date)
-                let endNextMonth = Calendar.current.date(byAdding: .month, value: 1, to: tempEnd! as Date)
-                
-                repeatGoal.startDate = startNextMonth as NSDate?
-                repeatGoal.endDate = endNextMonth! as NSDate
-                repeatGoal.group = newGoal.group
-                repeatGoal.count = newGoal.count
-                repeatGoal.groupColor = newGoal.groupColor
-                repeatGoal.repeatStatus = "copy"
-                repeatGoal.title = newGoal.title
-                tempStart = repeatGoal.startDate
-                tempEnd = repeatGoal.endDate
-                CoreDataHelper.saveGoal()
-            }
-        }
-        
-        CoreDataHelper.saveGoal()
-    }
-    
-    @IBAction func cancelGoal(_ sender: Any) {
+    @IBAction func cancelGoal(_ sender: UIBarButtonItem) {
         CoreDataHelper.delete(goal: newGoal)
         performSegue(withIdentifier: "unwindToCalendar", sender: nil)
     }

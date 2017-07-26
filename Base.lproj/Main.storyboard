@@ -206,7 +206,7 @@
                                         <rect key="frame" x="0.0" y="28" width="394" height="101"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hyk-m8-dKx" id="1ID-ZL-3bB">
-                                            <rect key="frame" x="0.0" y="0.0" width="394" height="100.66666666666667"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="394" height="100.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eW8-2I-Aeh">
@@ -290,6 +290,7 @@
                             <constraint firstItem="Iox-Sd-Xjb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="B89-9B-H1L"/>
                             <constraint firstAttribute="trailing" secondItem="Iox-Sd-Xjb" secondAttribute="trailing" id="FZT-eY-eZT"/>
                             <constraint firstItem="3rb-9X-MW9" firstAttribute="centerX" secondItem="1a9-1p-Np6" secondAttribute="centerX" id="KJf-PV-wuz"/>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="9.6666666666666572" id="O8z-A9-4BE"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="3rb-9X-MW9" secondAttribute="bottom" constant="8" symbolic="YES" id="QOQ-wt-Ujv"/>
                             <constraint firstItem="3rb-9X-MW9" firstAttribute="top" secondItem="1a9-1p-Np6" secondAttribute="bottom" constant="8" symbolic="YES" id="UzW-ai-fLi"/>
                             <constraint firstItem="1a9-1p-Np6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="a53-9d-AqA"/>
