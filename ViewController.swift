@@ -12,7 +12,6 @@ import JTAppleCalendar
 class ViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
-    @IBOutlet weak var goalInfoView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var goForwardButton: UIButton!
@@ -39,7 +38,7 @@ class ViewController: UIViewController {
         
         calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
-        goalInfoView.isHidden = true
+        tableView.isHidden = true
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -183,11 +182,11 @@ extension ViewController: JTAppleCalendarViewDelegate {
         print(validCell.dayGoals)
         validCell.selectedView.isHidden = false
         
-        goalInfoView.isHidden = false
+        tableView.isHidden = false
         tableGoals = []
         
         if validCell.dayGoals.count == 0 {
-            goalInfoView.isHidden = true
+            tableView.isHidden = true
         } else {
             for goal in validCell.dayGoals {
                 if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {

@@ -25,13 +25,13 @@
                     <navigationItem key="navigationItem" title="New Goal" id="MrS-sx-9Ir">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Mlt-rV-TL7">
                             <connections>
-                                <action selector="cancelGoal:" destination="UVg-Up-lpX" id="eSt-cq-crA"/>
-                                <segue destination="aCp-BO-TUY" kind="unwind" unwindAction="unwindToCalendar:" id="Guu-1F-6vO"/>
+                                <action selector="cancelGoal:" destination="UVg-Up-lpX" id="p4I-Iy-C4d"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <segue destination="QXk-hG-EVx" kind="show" identifier="saveGoal" id="TsZ-8c-0hV"/>
+                        <segue destination="aCp-BO-TUY" kind="unwind" identifier="unwindToCalendar" unwindAction="unwindToCalendar:" id="DmV-Qa-0Q5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cs7-UC-Guj" userLabel="First Responder" sceneMemberID="firstResponder"/>

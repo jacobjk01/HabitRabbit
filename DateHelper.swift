@@ -30,7 +30,75 @@ extension Date {
         return Date()
     }
     
-    func dayNumberOfWeek() -> Int? {
-        return Calendar.current.dateComponents([.weekday], from: self).weekday
+    func isWeekDay() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday! > 1 && components.weekday! < 7 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isWeekend() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday! == 1 || components.weekday! == 7 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isFriday() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday == 6 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isSunday() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday == 1 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isMonday() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday == 2 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isSaturday() -> Bool {
+        let today = self
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)
+        let components = calendar!.components([.weekday], from: today)
+        
+        if components.weekday == 7 {
+            return true
+        } else {
+            return false
+        }
     }
 }
