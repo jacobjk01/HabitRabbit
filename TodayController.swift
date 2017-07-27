@@ -12,13 +12,19 @@ import UIKit
 class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
-
+    
+    var formatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        formatter.dateStyle = .full
+        formatter.timeStyle = .none
+        let date = formatter.string(from: ViewController.selectedDate)
+        self.navigationItem.title = date
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -66,8 +72,9 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     @IBAction func finishGoals(_ sender: Any) {
-        performSegue(withIdentifier: "unwindToCalendar", sender: nil)
+        performSegue(withIdentifier: "unwindToHome", sender: nil)
         ViewController.tableGoals = []
+        ViewController.selectedDate = Date()
     }
     
 }

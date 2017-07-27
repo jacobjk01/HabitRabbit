@@ -209,7 +209,7 @@
                         <barButtonItem key="leftBarButtonItem" title="Today" id="F4r-vv-Vd9">
                             <connections>
                                 <action selector="toToday:" destination="BYZ-38-t0r" id="FGU-jh-48a"/>
-                                <segue destination="q0C-KZ-OBW" kind="show" id="hiG-9x-yi0"/>
+                                <segue destination="q0C-KZ-OBW" kind="show" identifier="todayClicked" id="hiG-9x-yi0"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="K8O-Ij-j5n">
@@ -223,6 +223,7 @@
                         <outlet property="goBackwardButton" destination="ROE-WV-O6Y" id="Azu-vn-T0t"/>
                         <outlet property="goForwardButton" destination="Oq9-nI-lic" id="PXR-6Q-8vT"/>
                         <outlet property="monthLabel" destination="Yn4-4v-k3A" id="qL1-gX-Kfc"/>
+                        <segue destination="q0C-KZ-OBW" kind="show" identifier="dateClicked" id="Zcb-qn-q89"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -264,4 +265,7 @@
             <point key="canvasLocation" x="2683" y="618"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="hiG-9x-yi0"/>
+    </inferredMetricsTieBreakers>
 </document>

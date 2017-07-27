@@ -109,10 +109,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="NOG-BK-dz3" firstAttribute="top" secondItem="3rb-9X-MW9" secondAttribute="bottom" id="1fd-lx-oeZ"/>
-                            <constraint firstItem="3rb-9X-MW9" firstAttribute="top" secondItem="pOY-4P-Lic" secondAttribute="top" id="IpY-vy-HvN"/>
-                            <constraint firstItem="3rb-9X-MW9" firstAttribute="leading" secondItem="pOY-4P-Lic" secondAttribute="leading" id="JTt-ln-dLd"/>
-                            <constraint firstAttribute="trailing" secondItem="3rb-9X-MW9" secondAttribute="trailing" id="eif-aT-l4A"/>
+                            <constraint firstItem="3rb-9X-MW9" firstAttribute="leading" secondItem="pOY-4P-Lic" secondAttribute="leading" id="G6V-gx-5T8"/>
+                            <constraint firstItem="3rb-9X-MW9" firstAttribute="top" secondItem="pOY-4P-Lic" secondAttribute="top" id="Qzv-wu-46l"/>
+                            <constraint firstItem="3rb-9X-MW9" firstAttribute="bottom" secondItem="NOG-BK-dz3" secondAttribute="top" id="jrh-sr-FJB"/>
+                            <constraint firstAttribute="trailing" secondItem="3rb-9X-MW9" secondAttribute="trailing" id="z4i-jf-DQb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Goals" id="aW3-cr-qbF">
@@ -124,7 +124,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="3rb-9X-MW9" id="Q9B-VA-txc"/>
-                        <segue destination="fwg-Ea-Lqf" kind="unwind" identifier="unwindToCalendar" unwindAction="unwindToCalendar:" id="JxX-XK-GFv"/>
+                        <segue destination="fwg-Ea-Lqf" kind="unwind" identifier="unwindToHome" unwindAction="unwindToCalendar:" id="JxX-XK-GFv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xZb-FW-thB" userLabel="First Responder" sceneMemberID="firstResponder"/>

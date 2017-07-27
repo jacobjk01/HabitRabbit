@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     
     var today = Date()
     var todayGoals = [Goal]()
+    static var selectedDate = Date()
     let refreshControl = UIRefreshControl()
     var currentSection = 0
     
@@ -101,6 +102,7 @@ class ViewController: UIViewController {
     
     @IBAction func toToday(_ sender: UIBarButtonItem) {
         print(todayGoals)
+        ViewController.selectedDate = today
         ViewController.tableGoals = todayGoals
     }
 }
@@ -191,6 +193,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
         validCell.selectedView.isHidden = false
         
         ViewController.tableGoals = []
+        ViewController.selectedDate = date
         
         if validCell.dayGoals.count != 0 {
             for goal in validCell.dayGoals {
@@ -200,6 +203,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
             }
         }
         
+        performSegue(withIdentifier: "dateClicked", sender: nil)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
