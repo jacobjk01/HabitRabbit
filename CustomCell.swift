@@ -14,7 +14,7 @@ class CustomCell: JTAppleCell {
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var selectedView: UIView!
-    @IBOutlet weak var goalDurationLine: UIView!
-    
+
     var dayGoals = [Goal]()
+    let lineView = LineView(frame: CGRect(x: 3, y: 50, width: 52, height: 5))
 }

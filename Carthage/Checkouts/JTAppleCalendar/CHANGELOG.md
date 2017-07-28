@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 `JTAppleCalendar` adheres to [Semantic Versioning](http://semver.org/).
 
 #### 7.x Releases
-- `7.0.0` Releases - [7.0.0](#700)|[7.0.1](#701)|[7.0.2](#702)|[7.0.3](#703)|[7.0.4](#704)
+- `7.0.0` Releases - [7.0.0](#700)|[7.0.1](#701)|[7.0.2](#702)|[7.0.3](#703)|[7.0.4](#704)|[7.0.5](#705)
 
 #### 6.x Releases
 - `6.1.0` Releases - [6.1.0](#610)|[6.1.1](#611)|[6.1.2](#612)|[6.1.3](#613)|[6.1.4](#614)|[6.1.5](#615)|[6.1.6](#616)
@@ -29,6 +29,14 @@ All notable changes to this project will be documented in this file.
 - `1.0.x` Releases - [1.0.0](#100)
 
 ---
+## [7.0.5](https://github.com/patchthecode/JTAppleCalendar/releases/tag/7.0.5)
+- [bug fix](https://github.com/patchthecode/JTAppleCalendar/commit/bcbb2bc5696cb2f15a6e87e1023c3a9cdf3dfdff)
+- [added anchor dates on reload](https://github.com/patchthecode/JTAppleCalendar/commit/b81158dfd7600e1d31143be4fbfba32af2187253)
+   - Sometimes on reload you do not want to see scrolling. Anchor dates solved that problem.
+- [Fixed double reloading of calendar](https://github.com/patchthecode/JTAppleCalendar/commit/05c6f518de9484d19faba2ae2f7fba2ffb8e9cba)
+- [Fixed crash when resizing from zero height/width](https://github.com/patchthecode/JTAppleCalendar/commit/765d919bb91fa3817d79d78f735bee0b720f3ba3)
+- [Added function to get month data](https://github.com/patchthecode/JTAppleCalendar/commit/502d53d7a815f93e099bb2b81b4c4b6e125b26bb)
+
 ## [7.0.4](https://github.com/patchthecode/JTAppleCalendar/releases/tag/7.0.4)
 - [Function signature change to fix issue on shouldSelect/shouldDeselect function](https://github.com/patchthecode/JTAppleCalendar/commit/64b2bd1aa8ecab97c8a2bc92020724e97702887a)
 - Reverted unavailability of isSelected on date cells.

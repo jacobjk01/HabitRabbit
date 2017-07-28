@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
+import SwipeCellKit
 
-class GoalCell: UITableViewCell {
+class GoalCell: SwipeTableViewCell {
     
     @IBOutlet weak var goalLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!

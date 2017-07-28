@@ -1,2 +1,3 @@
 github "patchthecode/JTAppleCalendar" ~> 7.0
 github "xmartlabs/Eureka" ~> 3.0
+github "jerkoch/SwipeCellKit"
