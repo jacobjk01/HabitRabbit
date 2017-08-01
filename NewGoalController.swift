@@ -16,7 +16,7 @@ class NewGoalController:  FormViewController {
     var newGoal = CoreDataHelper.newGoal()
     var groupDict = CoreDataHelper.retrieveGroupDict()
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,27 +64,7 @@ class NewGoalController:  FormViewController {
                     DateInlineRow.updateCell()
                 }
             })
-        +++ Section(header: "Count", footer: "Count refers to how many times you want to complete your goal in your selected duration. For example, you could indicate that you want to work out three times in this week")
-            <<< PushRow<String>("Count Duration") {
-                $0.title = $0.tag
-                $0.value = "Total"
-                $0.selectorTitle = "Select a Duration"
-                $0.options = ["Daily", "Weekly", "Monthly", "Total"]
-                let ruleRequiredViaClosure = RuleClosure<String> { rowValue in
-                    return (rowValue == nil || rowValue!.isEmpty) ? ValidationError(msg: "Field required!") : nil
-                }
-                $0.add(rule: ruleRequiredViaClosure)
-                $0.validationOptions = .validatesOnChange
-            }
-            .cellUpdate { cell, row in
-                if !row.isValid {
-                    cell.textLabel?.textColor = .red
-                }
-            }
-            <<< IntRow("Count") {
-                $0.title = $0.tag
-                $0.value = 1
-            }
+            
         +++ Section("Repeat")
             <<< PushRow<String>("Repeat Interval") {
                 $0.title = $0.tag
@@ -187,15 +167,24 @@ class NewGoalController:  FormViewController {
             }.onCellSelection({ (cell, row) in
                 let formValues = self.form.values()
                 
+                let alertController = UIAlertController(title: "Could not save", message: "\n", preferredStyle: .alert)
+                
+                let OKAction = UIAlertAction(title: "OK", style: .default) { action in
+                }
+                alertController.addAction(OKAction)
+                
                 self.newGoal.title = formValues["Title"] as? String
+                print(self.newGoal.title)
+                guard (self.newGoal.title != nil && self.newGoal.title != "") else {
+                    alertController.message?.append("Title not valid \n")
+                    self.present(alertController, animated: true)
+                    return
+                }
                 
                 self.newGoal.startDate = formValues["Start Date"] as? NSDate
                 self.newGoal.endDate = formValues["End Date"] as? NSDate
                 
-                self.newGoal.countDuration = formValues["Count Duration"] as? String
-                self.newGoal.count = Int64(formValues["Count"] as! Int)
-                
-                self.newGoal.repeatStatus = "original"
+                self.newGoal.completionStatus = "Not Done"
                 
                 let group = formValues["Group"] as? String
                 if group != "New..." {
@@ -203,6 +192,13 @@ class NewGoalController:  FormViewController {
                     self.newGoal.groupColor = self.groupDict[group!]
                 } else {
                     self.newGoal.group = formValues["New Group Name"] as? String
+                    
+                    guard (self.newGoal.group != nil && self.newGoal.group != "") else {
+                        alertController.message?.append("Group Name not valid \n")
+                        self.present(alertController, animated: true)
+                        return
+                    }
+                    
                     var groupColor = (formValues["New Group Color"] as! UIColor).toHexString()
                     groupColor.remove(at: groupColor.startIndex)
                     self.newGoal.groupColor = groupColor
@@ -314,11 +310,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24)
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -328,11 +321,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*3)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*3)
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -342,11 +332,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*6)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*6)
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -356,11 +343,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*7)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*7)
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -370,11 +354,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*7*2)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*7*2)
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -384,11 +365,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = Calendar.current.date(byAdding: .month, value: 1, to: (goal.startDate as Date?)!) as NSDate?
         newGoal.endDate = Calendar.current.date(byAdding: .month, value: 1, to: (goal.endDate as Date?)!) as NSDate?
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         return newGoal
     }
@@ -398,11 +376,8 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate
         newGoal.endDate = goal.endDate
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         while (!((newGoal.startDate! as Date).isMonday())) {
             newGoal.startDate = newGoal.startDate!.addingTimeInterval(60*60*24)
@@ -416,11 +391,9 @@ class NewGoalController:  FormViewController {
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate
         newGoal.endDate = goal.endDate
-        newGoal.countDuration = goal.countDuration
-        newGoal.count = goal.count
+        newGoal.completionStatus = goal.completionStatus
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
-        newGoal.repeatStatus = "copy"
         // insert reminders initialization here
         while (!((newGoal.startDate! as Date).isSaturday())) {
             newGoal.startDate = newGoal.startDate!.addingTimeInterval(60*60*24)

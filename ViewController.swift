@@ -24,7 +24,6 @@ class ViewController: UIViewController {
     var today = Date()
     var todayGoals = [Goal]()
     static var selectedDate = Date()
-    let refreshControl = UIRefreshControl()
     var currentSection = 0
     
     override func viewDidLoad() {
@@ -42,24 +41,11 @@ class ViewController: UIViewController {
             print(i.rerun)
             print(i.startDate)
             print(i.endDate)
-            print(i.count)
+            print(i.completionStatus)
         }
+        today = Date()
     }
     
-    func reloadCalendar() {
-        //goals = CoreDataHelper.retrieveGoals()
-        if self.refreshControl.isRefreshing {
-            self.refreshControl.endRefreshing()
-        }
-        self.calendarView.reloadData()
-        currentSection = calendarView.currentSection()!
-    }
-    
-    func configureCalendar() {
-        refreshControl.addTarget(self, action: #selector(reloadCalendar), for: .valueChanged)
-        calendarView.addSubview(refreshControl)
-    
-    }
     override func viewDidAppear(_ animated: Bool) {
         ViewController.goals = CoreDataHelper.retrieveGoals()
         todayGoals = []
@@ -94,9 +80,37 @@ class ViewController: UIViewController {
         ViewController.selectedDate = today
         ViewController.tableGoals = todayGoals
         todayGoals = []
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromLeft
+        view.window!.layer.add(transition, forKey: kCATransition)
+        
         performSegue(withIdentifier: "dateClicked", sender: nil)
     }
     
+    @IBAction func addClicked(_ sender: UIBarButtonItem) {
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromRight
+        view.window!.layer.add(transition, forKey: kCATransition)
+        
+        performSegue(withIdentifier: "addClicked", sender: nil)
+    }
+    
+    func dayClicked() {
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromLeft
+        view.window!.layer.add(transition, forKey: kCATransition)
+        
+        performSegue(withIdentifier: "dateClicked", sender: nil)
+    }
     
 }
 
@@ -152,25 +166,28 @@ extension ViewController: JTAppleCalendarViewDelegate {
         cell.lineView.colors = []
         cell.lineView.values = []
         
+        let dateNoTime = Calendar.current.startOfDay(for: date)
+        let todayNoTime = Calendar.current.startOfDay(for: today)
         
         var count = 0
         for goal in ViewController.goals {
             if date.isBetween(date: goal.startDate!, andDate: goal.endDate! ) {
                 cell.dayGoals.append(goal)
                     cell.lineView.isHidden = false
-                
+            
                     if let color = goal.groupColor {
                         cell.lineView.colors.append(UIColor(hex: color))
                     } else {
                         cell.lineView.colors.append(UIColor.black)
                     }
-                
+            
                 if currentDateString == cellStateDateString {
                     todayGoals.append(goal)
                 }
                 count += 1
-            }
+            } 
         }
+        
         
         if count == 0 {
             cell.lineView.isHidden = true
@@ -178,9 +195,27 @@ extension ViewController: JTAppleCalendarViewDelegate {
             cell.lineView.values = []
         } else {
             cell.lineView.isHidden = false
-            let value = CGFloat(1 / Double(cell.lineView.colors.count))
-            for _ in 0..<count {
-                cell.lineView.values.append(value)
+            if dateNoTime < todayNoTime {
+                var passedDayStatus = true
+
+                for goal in cell.dayGoals {
+                    if goal.completionStatus == "Not Done" {
+                        passedDayStatus = false
+                    }
+                }
+                
+                if passedDayStatus == false {
+                    cell.lineView.colors = [UIColor.green]
+                    cell.lineView.values = [1]
+                } else {
+                    cell.lineView.colors = [UIColor.red]
+                    cell.lineView.values = [1]
+                }
+            } else {
+                let value = CGFloat(1 / Double(cell.lineView.colors.count))
+                for _ in 0..<count {
+                    cell.lineView.values.append(value)
+                }
             }
         }
         
@@ -204,7 +239,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
                 }
             }
             ViewController.selectedDate = date
-            performSegue(withIdentifier: "dateClicked", sender: nil)
+            dayClicked()
         }
     }
     

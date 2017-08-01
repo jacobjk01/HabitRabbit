@@ -36,7 +36,7 @@
                                                             <constraint firstAttribute="width" constant="30" id="DiE-b0-rFc"/>
                                                             <constraint firstAttribute="height" constant="30" id="Dot-LJ-6iU"/>
                                                         </constraints>
-                                                        <state key="normal" title="L" image="002-left-arrow"/>
+                                                        <state key="normal" title="L" image="005-back"/>
                                                         <connections>
                                                             <action selector="previousMonthClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="INN-hD-CNh"/>
                                                         </connections>
@@ -53,7 +53,7 @@
                                                             <constraint firstAttribute="height" constant="30" id="FEP-rH-XM9"/>
                                                             <constraint firstAttribute="width" constant="30" id="JN0-ut-lT9"/>
                                                         </constraints>
-                                                        <state key="normal" image="001-right-arrow"/>
+                                                        <state key="normal" image="004-next"/>
                                                         <connections>
                                                             <action selector="nextMonthClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6fd-sH-hqb"/>
                                                         </connections>
@@ -126,7 +126,7 @@
                                     </stackView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D5s-gU-qV3" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
                                         <rect key="frame" x="0.0" y="50.333333333333314" width="414" height="355"/>
-                                        <color key="backgroundColor" red="0.031372549019607843" green="0.40392156862745099" blue="0.53333333333333333" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.16078431372549018" green="0.3634619530682644" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="355" id="WSt-wn-Y1M"/>
                                         </constraints>
@@ -197,7 +197,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="K8O-Ij-j5n">
                             <connections>
-                                <segue destination="s0p-xy-r1q" kind="show" id="8wx-AI-rbg"/>
+                                <action selector="addClicked:" destination="BYZ-38-t0r" id="uim-Bs-8HY"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -206,7 +206,8 @@
                         <outlet property="goBackwardButton" destination="ROE-WV-O6Y" id="Azu-vn-T0t"/>
                         <outlet property="goForwardButton" destination="Oq9-nI-lic" id="PXR-6Q-8vT"/>
                         <outlet property="monthLabel" destination="Yn4-4v-k3A" id="qL1-gX-Kfc"/>
-                        <segue destination="q0C-KZ-OBW" kind="show" identifier="dateClicked" id="Zcb-qn-q89"/>
+                        <segue destination="q0C-KZ-OBW" kind="show" identifier="dateClicked" animates="NO" id="Zcb-qn-q89"/>
+                        <segue destination="s0p-xy-r1q" kind="show" identifier="addClicked" animates="NO" id="ojA-b3-eyH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -249,7 +250,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="001-right-arrow" width="512" height="512"/>
-        <image name="002-left-arrow" width="512" height="512"/>
+        <image name="004-next" width="512" height="512"/>
+        <image name="005-back" width="512" height="512"/>
     </resources>
 </document>

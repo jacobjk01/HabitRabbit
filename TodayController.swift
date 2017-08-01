@@ -37,38 +37,36 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
+    func deleteAll(deletedGoal: String) {
+        for goal in ViewController.goals {
+            print(goal)
+            if (goal.title == deletedGoal) {
+                CoreDataHelper.delete(goal: goal)
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ViewController.tableGoals.count
     }
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GoalCell") as! GoalCell
         let row = indexPath.row
         let goal = ViewController.tableGoals[row]
         
-        if goal.count == 0 {
+        if goal.completionStatus == "Done" {
             return 100
         }
         return cell.frame.height
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let row = indexPath.row
-        let goal = ViewController.tableGoals[row]
-        
-        if goal.count == 0 {
-            return false
-        }
-        return true
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GoalCell") as! GoalCell
         
-        cell.delegate = self as? SwipeTableViewCellDelegate
+        cell.delegate = self
         
-        //print(ViewController.tableGoals)
+        cell.backgroundColor = UIColor.white
         
         if ViewController.tableGoals.count == 0 {
             tableView.isHidden = true
@@ -79,7 +77,12 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         let goal = ViewController.tableGoals[row]
         
         cell.goalLabel.text = goal.title
-        cell.descriptionLabel.text = "Complete your task \(goal.count) more times to reach your goal"
+        if ViewController.tableGoals[row].completionStatus == "Done" {
+            cell.descriptionLabel.text = "Finished"
+        } else {
+            cell.descriptionLabel.text = "Complete This!"
+        }
+//        cell.streakLabel
         cell.groupLabel.text = goal.group
         if let color = goal.groupColor {
             cell.groupColorBox.backgroundColor = UIColor(hex: color)
@@ -87,31 +90,51 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
             cell.groupColorBox.backgroundColor = UIColor.black
         }
         
-        if goal.count == 0 {
+        let dateNoTime = Calendar.current.startOfDay(for: ViewController.selectedDate)
+        let todayNoTime = Calendar.current.startOfDay(for: Date())
+        
+        if goal.completionStatus == "Done" {
             cell.backgroundColor = UIColor(hex: "E7FFE7")
+            cell.isUserInteractionEnabled = false
+        } else if dateNoTime < todayNoTime {
+            cell.backgroundColor = UIColor(hex: "FFB2B2")
+            cell.isUserInteractionEnabled = false
         }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        if orientation == .right {
         
+        if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
                 let deletedGoal = ViewController.tableGoals[indexPath.row]
-                    ViewController.tableGoals.remove(at: indexPath.row)
-                    if (deletedGoal.repeatStatus == "original") {
-                        for goal in ViewController.goals {
-                            // need a better if statement here
-                            if (goal.repeatStatus == "copy" && goal.title == deletedGoal.title) {
-                                CoreDataHelper.delete(goal: goal)
-                            }
-                        }
-                    }
-                    CoreDataHelper.delete(goal: deletedGoal)
                 
-                    tableView.reloadData()
+                    let alertController = UIAlertController(title: "Are you sure?", message: "\n", preferredStyle: .actionSheet)
+                
+                    let deleteAction = UIAlertAction(title: "Delete This Only", style: .default, handler: { (_) in
+                        CoreDataHelper.delete(goal: deletedGoal)
+                        
+                        ViewController.tableGoals.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+                    })
+                    let deleteAllAction = UIAlertAction(title: "Delete All", style: .destructive, handler: { (_) in
+                        self.deleteAll(deletedGoal: deletedGoal.title!)
+                        
+                        ViewController.tableGoals.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+                    })
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in })
+                
+                    alertController.addAction(deleteAction)
+                    alertController.addAction(deleteAllAction)
+                    alertController.addAction(cancelAction)
+                
+                    self.present(alertController, animated: true, completion: {
+                    })
+                
                     ViewController.goals = CoreDataHelper.retrieveGoals()
+                    tableView.reloadData()
             }
         
             // customize the action appearance
@@ -121,47 +144,52 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         else if orientation == .left {
             
-            let checkAction = SwipeAction(style: .destructive, title: "Edit", handler: { (action, indexPath) in
-                let alertController = UIAlertController(title: "Completed Goals", message: "How many times have you completed this goal?", preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
-                    
-                }
-                alertController.addAction(cancelAction)
+            let checkAction = SwipeAction(style: .destructive, title: "Complete", handler: { (action, indexPath) in
                 
-                alertController.addTextField { textField in
-                    textField.placeholder = "Email"
-                    textField.keyboardType = .numberPad
-                }
-                
-                let OKAction = UIAlertAction(title: "OK", style: .default) { action in
-                    let changedGoal = ViewController.tableGoals[indexPath.row]
-                    for goal in ViewController.goals {
-                        if goal == changedGoal {
-                            let num = Int((alertController.textFields?[0].text)!)!
-                            for _ in 1...num {
-                                if goal.count != 0 {
-                                    goal.count = goal.count - 1
-                                }
-                            }
-                        }
+                let changedGoal = ViewController.tableGoals[indexPath.row]
+                for goal in ViewController.goals {
+                    if goal == changedGoal {
+                        goal.completionStatus = "Done"
                     }
-                    tableView.reloadData()
-                    CoreDataHelper.saveGoal()
                 }
-                alertController.addAction(OKAction)
+                tableView.beginUpdates()
+                tableView.endUpdates()
                 
-                self.present(alertController, animated: true) {
-                    // ...
-                }
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.backgroundColor = UIColor(hex: "E7FFE7")
+                
+                CoreDataHelper.saveGoal()
+                
             })
             
             checkAction.backgroundColor = UIColor.green
-            
-            //deleteAction.image =
+            checkAction.image = UIImage(named: "complete")
             
             return [checkAction]
         }
         return nil
+    }
+    
+    var shownIndexes : [IndexPath] = []
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (shownIndexes.contains(indexPath) == false) {
+            shownIndexes.append(indexPath)
+            
+            let delay = Double(indexPath.row) * 0.1
+            UIView.animate(withDuration: 0.5, delay: delay, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .curveEaseInOut ,animations: {
+                cell.transform = CGAffineTransform(translationX: 500, y: 0)
+                cell.layer.shadowColor = UIColor.black.cgColor
+                cell.layer.shadowOffset = CGSize(width: 10, height: 10)
+                cell.alpha = 0
+                
+                UIView.beginAnimations("rotation", context: nil)
+                cell.transform = CGAffineTransform(translationX: 0, y: 0)
+                cell.alpha = 1
+                cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+                UIView.commitAnimations()
+            }, completion: nil)
+        }
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
