@@ -16,4 +16,5 @@ class GoalCell: SwipeTableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var groupLabel: UILabel!
     @IBOutlet weak var groupColorBox: UIView!
+    @IBOutlet weak var divisionLine: UIView!
 }

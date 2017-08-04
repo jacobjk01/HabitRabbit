@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SwipeCellKit
+import CoreData
 
 class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSource, SwipeTableViewCellDelegate {
     
@@ -37,12 +38,44 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
-    func deleteAll(deletedGoal: String) {
-        for goal in ViewController.goals {
-            print(goal)
-            if (goal.title == deletedGoal) {
+    func deleteAll(deletedGoal: Goal) {
+        for goal in ViewController.goals.reversed() {
+            if (goal.title == deletedGoal.title) {
+                self.deleteReminders(goal: goal)
                 CoreDataHelper.delete(goal: goal)
             }
+        }
+    }
+    
+    func deleteReminders(goal: Goal) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Reminder")
+        
+        do {
+            let result = try managedContext?.fetch(fetchRequest)
+            
+            var index = 0
+            for currentGoal in ViewController.goals {
+                if currentGoal != goal {
+                    index += Int(currentGoal.reminderCount)
+                } else if goal.reminderCount > 0 {
+                    for _ in 1...goal.reminderCount {
+                        print("deleted \(String(describing: result?[index]))")
+                        managedContext?.delete((result?[index])!)
+                        index += 1
+                    }
+                }
+            }
+            do {
+                try managedContext?.save()
+            } catch {
+                let saveError = error as NSError
+                print(saveError)
+            }
+        } catch {
+            let fetchError = error as NSError
+            print(fetchError)
         }
     }
     
@@ -78,9 +111,13 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         cell.goalLabel.text = goal.title
         if ViewController.tableGoals[row].completionStatus == "Done" {
-            cell.descriptionLabel.text = "Finished"
+            cell.descriptionLabel.text = "Great! You've successfully finished this goal.streak times in a row!"
+            cell.divisionLine.isHidden = true
+            cell.groupLabel.isHidden = true
         } else {
             cell.descriptionLabel.text = "Complete This!"
+            cell.divisionLine.isHidden = false
+            cell.groupLabel.isHidden = false
         }
 //        cell.streakLabel
         cell.groupLabel.text = goal.group
@@ -109,17 +146,20 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
                 let deletedGoal = ViewController.tableGoals[indexPath.row]
+                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Reminder")
                 
                     let alertController = UIAlertController(title: "Are you sure?", message: "\n", preferredStyle: .actionSheet)
                 
                     let deleteAction = UIAlertAction(title: "Delete This Only", style: .default, handler: { (_) in
+                        self.deleteReminders(goal: deletedGoal)
                         CoreDataHelper.delete(goal: deletedGoal)
                         
                         ViewController.tableGoals.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
                     })
                     let deleteAllAction = UIAlertAction(title: "Delete All", style: .destructive, handler: { (_) in
-                        self.deleteAll(deletedGoal: deletedGoal.title!)
+                        
+                            self.deleteAll(deletedGoal: deletedGoal)
                         
                         ViewController.tableGoals.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
@@ -152,11 +192,15 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                         goal.completionStatus = "Done"
                     }
                 }
+                let cell = tableView.cellForRow(at: indexPath) as! GoalCell
+                cell.backgroundColor = UIColor(hex: "E7FFE7")
+                
+                cell.divisionLine.isHidden = true
+                cell.groupLabel.isHidden = true
+                
                 tableView.beginUpdates()
                 tableView.endUpdates()
                 
-                let cell = tableView.cellForRow(at: indexPath)
-                cell?.backgroundColor = UIColor(hex: "E7FFE7")
                 
                 CoreDataHelper.saveGoal()
                 
@@ -203,6 +247,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         performSegue(withIdentifier: "unwindToHome", sender: nil)
         ViewController.tableGoals = []
         ViewController.selectedDate = Date()
+        ViewController.todayReminders = []
     }
     
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import JTAppleCalendar
+import CoreData
 
 class ViewController: UIViewController {
     
@@ -26,31 +27,46 @@ class ViewController: UIViewController {
     static var selectedDate = Date()
     var currentSection = 0
     
+    static var todayReminders: [Date] = []
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
-
+        
+        
         setupCalendarView()
 
         ViewController.goals = CoreDataHelper.retrieveGoals()
-        for i in ViewController.goals {
-            print(i.title)
-            print(i.group)
-            print(i.rerun)
-            print(i.startDate)
-            print(i.endDate)
-            print(i.completionStatus)
-        }
+//        for i in ViewController.goals {
+//            print(i.title)
+//            print(i.group)
+//            print(i.rerun)
+//            print(i.startDate)
+//            print(i.endDate)
+//            print(i.completionStatus)
+//            print(i.reminders)
+//        }
         today = Date()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         ViewController.goals = CoreDataHelper.retrieveGoals()
         todayGoals = []
+        
         calendarView.reloadData()
-     }
+        print("today's reminders: \(ViewController.todayReminders)")
+        printReminders()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        //resetReminders()
+        calendarView.reloadData()
+    }
+    
     
     func setupCalendarView() {
         calendarView.minimumLineSpacing = 0
@@ -112,6 +128,36 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "dateClicked", sender: nil)
     }
     
+    func addReminders(goal: Goal, reminders:[Date]) {
+        var index = 0
+        for currentGoal in ViewController.goals {
+            if currentGoal != goal {
+                index += Int(currentGoal.reminderCount)
+            } else if goal.reminderCount > 0 {
+                for _ in 1...goal.reminderCount {
+                    ViewController.todayReminders.append(reminders[index])
+                    index += 1
+                }
+                
+            }
+        }
+    }
+    
+    func printReminders() {
+        formatter.timeStyle = .short
+        for reminder in ViewController.todayReminders {
+            print("today's Reminder: \(formatter.string(from: reminder))")
+        }
+    }
+    
+    func printFetchedReminders(reminders: [Date]) {
+        formatter.timeStyle = .short
+        
+        for reminder in reminders {
+            print("fetched: \(formatter.string(from: reminder))")
+        }
+    }
+    
 }
 
 extension ViewController: JTAppleCalendarViewDataSource{
@@ -140,7 +186,14 @@ extension ViewController: JTAppleCalendarViewDataSource{
 
 extension ViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
+        
         let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        
+//        cell.transform = CGAffineTransform(scaleX: 0, y: 0)
+//        let delay = Double(indexPath.row) * 0.015
+//        UIView.animate(withDuration: 0.2, delay: delay, usingSpringWithDamping: 0.2, initialSpringVelocity: 0, options: .curveEaseInOut ,animations: {
+//            cell.transform = CGAffineTransform.identity
+//        }, completion: nil)
         
         cell.selectedView.isHidden = true
         // Setup Cell text
@@ -183,6 +236,32 @@ extension ViewController: JTAppleCalendarViewDelegate {
             
                 if currentDateString == cellStateDateString {
                     todayGoals.append(goal)
+                    
+                    //setup reminders
+                    
+                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                    let managedContext = appDelegate?.persistentContainer.viewContext
+                    
+                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Reminder")
+                    
+                    formatter.timeStyle = .short
+                    
+                    do {
+                        let result = try managedContext?.fetch(fetchRequest)
+                        print(result?.count)
+                        var reminders: [Date] = []
+                        for r in result! {
+                            
+                            reminders.append(r.value(forKey: "time") as! Date)
+                        }
+                        printFetchedReminders(reminders: reminders)
+                        addReminders(goal: goal, reminders: reminders)
+
+                    } catch {
+                        let fetchError = error as NSError
+                        print(fetchError)
+                    }
+                    
                 }
                 count += 1
             } 
@@ -205,16 +284,28 @@ extension ViewController: JTAppleCalendarViewDelegate {
                 }
                 
                 if passedDayStatus == false {
-                    cell.lineView.colors = [UIColor.green]
+                    cell.lineView.colors = [UIColor.red]
                     cell.lineView.values = [1]
                 } else {
-                    cell.lineView.colors = [UIColor.red]
+                    cell.lineView.colors = [UIColor.green]
                     cell.lineView.values = [1]
                 }
             } else {
                 let value = CGFloat(1 / Double(cell.lineView.colors.count))
                 for _ in 0..<count {
                     cell.lineView.values.append(value)
+                }
+                
+                var passedDayStatus = true
+                
+                for goal in cell.dayGoals {
+                    if goal.completionStatus == "Not Done" {
+                        passedDayStatus = false
+                    }
+                }
+                if passedDayStatus == true {
+                    cell.lineView.colors = [UIColor.green]
+                    cell.lineView.values = [1]
                 }
             }
         }
@@ -227,7 +318,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         
         guard let validCell = cell as? CustomCell else { return }
-        print(validCell.dayGoals)
+        //print(validCell.dayGoals)
         validCell.selectedView.isHidden = false
         
         ViewController.tableGoals = []
@@ -241,6 +332,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
             ViewController.selectedDate = date
             dayClicked()
         }
+        
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {

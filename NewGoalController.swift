@@ -10,15 +10,25 @@ import Foundation
 import UIKit
 import Eureka
 import ColorPickerRow
+import CoreData
 
-class NewGoalController:  FormViewController {
+class NewGoalController: FormViewController {
     
     var newGoal = CoreDataHelper.newGoal()
     var groupDict = CoreDataHelper.retrieveGroupDict()
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
     
+    
+    var reminders = [NSManagedObject]()
+    
+    let colors = ["CD5C5C", "F08080", "FA8072", "E9967A", "FFA07A", "DC143C", "FF0000", "B22222", "8B0000", "FFC0CB", "FFB6C1", "FF69B4", "FF1493", "C71585", "DB7093", "FFA07A", "FF7F50", "FF6347", "FF4500", "FF8C00", "FFA500", "FFD700", "FFFF00", "FFE4B5", "FFDAB9", "F0E68C", "E6E6FA", "D8BFD8", "DDA0DD", "EE82EE", "DA70D6", "FF00FF", "BA55D3", "9370DB", "663399", "8A2BE2", "9400D3", "9932CC", "8B008B", "800080", "4B0082", "6A5ACD", "483D8B", "7B68EE", "191970", "00008B", "0000CD", "0000FF", "4169E1", "7B68EE", "6495ED", "1E90FF", "00BFFF", "87CEFA", "87CEEB", "B0E0E6", "B0C4DE", "4682B4", "5F9EA0", "00CED1", "40E0D0", "7FFFD4", "AFEEEE", "E0FFFF", "00FFFF", "008080", "008B8B", "20B2AA", "66CDAA", "6B8E23", "9ACD32", "006400", "228B22", "3CB371", "00FF7F", "00FA9A", "98FB98", "32CD32", "00FF00", "7FFF00", "ADFF2F"]
+        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
+        
         
         if groups.count == 0 {
             groups.append("New...")
@@ -44,26 +54,45 @@ class NewGoalController:  FormViewController {
                 }
             }
         +++ Section("Date")
+            <<< SwitchRow("One Day") {
+                $0.title = $0.tag
+                $0.value = false
+            }
             <<< DateInlineRow("Start Date") {
                 $0.title = $0.tag
                 $0.value = Date()
+                $0.hidden = Condition.function(["One Day"], { form in
+                    return !((form.rowBy(tag: "One Day") as? SwitchRow)?.value != true)
+                })
             }.onChange({ (DateInlineRow) in
                 let endDateRow: DateInlineRow = self.form.rowBy(tag: "End Date")!
                 if endDateRow.value?.compare(DateInlineRow.value!) == ComparisonResult.orderedAscending {
                     DateInlineRow.value = endDateRow.value
-                    DateInlineRow.updateCell()
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
                 }
             })
             <<< DateInlineRow("End Date") {
                 $0.title = $0.tag
                 $0.value = Date()
+                $0.hidden = Condition.function(["One Day"], { form in
+                    return !((form.rowBy(tag: "One Day") as? SwitchRow)?.value != true)
+                })
             }.onChange({ (DateInlineRow) in
                 let startDateRow: DateInlineRow = self.form.rowBy(tag: "Start Date")!
                 if startDateRow.value?.compare(DateInlineRow.value!) == ComparisonResult.orderedDescending {
                     DateInlineRow.value = startDateRow.value
-                    DateInlineRow.updateCell()
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
                 }
             })
+            <<< DateInlineRow("Date") {
+                $0.title = $0.tag
+                $0.value = Date()
+                $0.hidden = Condition.function(["One Day"], { form in
+                    return !((form.rowBy(tag: "One Day") as? SwitchRow)?.value == true)
+                })
+            }
             
         +++ Section("Repeat")
             <<< PushRow<String>("Repeat Interval") {
@@ -71,17 +100,8 @@ class NewGoalController:  FormViewController {
                 $0.value = "None"
                 $0.selectorTitle = "Select a Repeat Interval"
                 $0.options = ["None", "Daily", "Weekdays", "Weekends", "Weekly", "Every Other Week", "Monthly"]
-                let ruleRequiredViaClosure = RuleClosure<String> { rowValue in
-                    return (rowValue == nil || rowValue!.isEmpty) ? ValidationError(msg: "Field required!") : nil
-                }
-                $0.add(rule: ruleRequiredViaClosure)
-                $0.validationOptions = .validatesOnChange
             }
-            .cellUpdate { cell, row in
-                if !row.isValid {
-                    cell.textLabel?.textColor = .red
-                }
-            }
+
             <<< PushRow<String>("Repeat End Date") {
                 $0.title = $0.tag
                 $0.value = "One Week Later"
@@ -98,9 +118,9 @@ class NewGoalController:  FormViewController {
                     return !((form.rowBy(tag: "Repeat End Date") as? PushRow)?.value == "Custom...")
                 })
             }
-        +++ Section("Groups")
+        +++ Section("Category")
             <<< PushRow<String> ("Group"){
-                $0.title = $0.tag
+                $0.title = "Category"
                 $0.value = ""
                 $0.selectorTitle = "Select Your Goal's Category"
                 $0.options = groups
@@ -136,7 +156,10 @@ class NewGoalController:  FormViewController {
                 row.hidden = Condition.function(["Group"], { form in
                     return !((form.rowBy(tag: "Group") as? PushRow)?.value == "New...")
                 })
-            }
+            }.cellSetup({ (cell, row) in
+                let palette = self.getColorPalette()
+                cell.palettes = [palette]
+            })
             
             +++ MultivaluedSection(multivaluedOptions: [.Insert, .Delete], header: "Reminders") {
                 $0.addButtonProvider = { section in
@@ -145,17 +168,17 @@ class NewGoalController:  FormViewController {
                     }
                 }
                 $0.multivaluedRowToInsertAt = { index in
-                    return TimeRow() {
+                    return TimeRow("tag_\(index+1)") {
                         let gregorian = Calendar(identifier: .gregorian)
                         let now = Date()
                         var components = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: now)
                         
-                        components.hour = 12
+                        components.hour = 5
                         components.minute = 00
                         components.second = 00
                         
                         let defaultTime = gregorian.date(from: components)!
-                        $0.value = defaultTime
+                        $0.baseValue = defaultTime
                         $0.title = "Reminder:"
                     }
                 }
@@ -174,15 +197,19 @@ class NewGoalController:  FormViewController {
                 alertController.addAction(OKAction)
                 
                 self.newGoal.title = formValues["Title"] as? String
-                print(self.newGoal.title)
                 guard (self.newGoal.title != nil && self.newGoal.title != "") else {
                     alertController.message?.append("Title not valid \n")
                     self.present(alertController, animated: true)
                     return
                 }
                 
-                self.newGoal.startDate = formValues["Start Date"] as? NSDate
-                self.newGoal.endDate = formValues["End Date"] as? NSDate
+                if formValues["One Day"] as? Bool == false {
+                    self.newGoal.startDate = formValues["Start Date"] as? NSDate
+                    self.newGoal.endDate = formValues["End Date"] as? NSDate
+                } else {
+                    self.newGoal.startDate = formValues["Date"] as? NSDate
+                    self.newGoal.endDate = formValues["Date"] as? NSDate
+                }
                 
                 self.newGoal.completionStatus = "Not Done"
                 
@@ -236,11 +263,52 @@ class NewGoalController:  FormViewController {
                     self.newGoal.repeatEndDate = endRepeat
                     self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
                 }
+                
+                //Reminders
+                
+                self.newGoal.reminderCount = 0
+                
+                let formatter = DateFormatter()
+                formatter.timeZone = NSTimeZone.default
+                formatter.timeStyle = .short
+                
+                
+                var i: Int = 1
+                while formValues["tag_\(i)"] != nil {
+                    let time = formValues["tag_\(i)"] as! Date
+                    let printDate = formatter.string(from: time)
+                    print("saved \(printDate)")
+                    self.saveReminder(time: time)
+                    self.newGoal.reminders?.adding(time)
+                    i+=1
+                    self.newGoal.reminderCount += 1
+                }
+                
+                
                 self.performSegue(withIdentifier: "unwindToCalendar", sender: nil)
+                ViewController.todayReminders = []
                 CoreDataHelper.saveGoal()
             })
     }
-    
+
+    func saveReminder(time: Date) {
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "Reminder", in: managedContext)
+        
+        let reminder = NSManagedObject(entity: entity!, insertInto: managedContext)
+        reminder.setValue(time, forKeyPath: "time")
+        
+        do {
+            try managedContext.save()
+            reminders.append(reminder)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        
+    }
+
     func repeatCreateGoal (repeatInterval: String, repeatEndDate: Date) {
         var tempGoal = newGoal
         switch repeatInterval {
@@ -405,6 +473,16 @@ class NewGoalController:  FormViewController {
     @IBAction func cancelGoal(_ sender: UIBarButtonItem) {
         CoreDataHelper.delete(goal: newGoal)
         performSegue(withIdentifier: "unwindToCalendar", sender: nil)
+        ViewController.todayReminders = []
+    }
+    
+    func getColorPalette() -> ColorPalette {
+        var colorSpecs: [ColorSpec] = []
+        for color in colors {
+            colorSpecs.append(ColorSpec(hex: "#\(color)", name: ""))
+        }
+        
+        return ColorPalette(name: "rowColors", palette: colorSpecs)
     }
     
 }

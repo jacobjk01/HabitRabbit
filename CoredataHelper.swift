@@ -15,6 +15,8 @@ class CoreDataHelper {
     static let persistentContainer = appDelegate.persistentContainer
     static let managedContext = persistentContainer.viewContext
     
+    var devices = [NSManagedObject]()
+    
     static func newGoal() -> Goal{
         let goal = NSEntityDescription.insertNewObject(forEntityName: "Goal", into: managedContext) as! Goal
         return goal
@@ -71,6 +73,33 @@ class CoreDataHelper {
             return groupResults
         } catch let error as NSError {
             print("Could not fetch \(error)")
+        }
+        return []
+    }
+    
+    static func retrieveReminders() -> [Date] {
+        let appDelegate =
+            UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Device")
+        
+        do {
+            let results =
+                try managedContext.fetch(fetchRequest)
+            
+            if results.count != 0 {
+                var array: [Date] = []
+                for result in results {
+                    
+                    let data = (result as AnyObject).value(forKey: "reminders") as! NSData
+                    let unarchiveObject = NSKeyedUnarchiver.unarchiveObject(with: data as Data)
+                    let arrayObject = unarchiveObject as AnyObject! as! [Date]
+                    array = arrayObject
+                }
+                return array
+            }
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
         }
         return []
     }
