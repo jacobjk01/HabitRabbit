@@ -6,8 +6,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="November Regular.ttf">
+            <string>November</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Ib Calendar Data Source-->
         <scene sceneID="tne-QT-ifu">
@@ -22,13 +28,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1a9-1p-Np6" userLabel="CalendarStackView">
-                                <rect key="frame" x="0.0" y="73.999999999999972" width="414" height="405.33333333333326"/>
+                                <rect key="frame" x="0.0" y="143" width="414" height="483"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iox-Sd-Xjb" userLabel="MonthHeaderView" customClass="MonthHeaderView" customModule="HabitTrack" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bt-tM-DeL" userLabel="MonthStackView">
-                                                <rect key="frame" x="37" y="-4" width="340" height="30"/>
+                                                <rect key="frame" x="37" y="8" width="340" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ROE-WV-O6Y">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -43,7 +49,7 @@
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yn4-4v-k3A" userLabel="monthLabel">
                                                         <rect key="frame" x="30" y="0.0" width="280" height="30"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                                        <fontDescription key="fontDescription" name="November" family="November" pointSize="20"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -59,102 +65,103 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             </stackView>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="4Uh-Eh-a7S"/>
+                                            <constraint firstAttribute="height" constant="45" id="4Uh-Eh-a7S"/>
                                             <constraint firstAttribute="trailing" secondItem="Oq9-nI-lic" secondAttribute="trailing" constant="37" id="TtQ-8q-hkW"/>
-                                            <constraint firstItem="1bt-tM-DeL" firstAttribute="top" secondItem="Iox-Sd-Xjb" secondAttribute="top" constant="-4" id="ZCZ-zj-D6j"/>
+                                            <constraint firstItem="1bt-tM-DeL" firstAttribute="centerY" secondItem="Iox-Sd-Xjb" secondAttribute="centerY" id="qTP-4c-pEx"/>
                                             <constraint firstItem="1bt-tM-DeL" firstAttribute="centerX" secondItem="Iox-Sd-Xjb" secondAttribute="centerX" id="tab-N8-4og"/>
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="wsr-BL-pTc" userLabel="WeekdayStackView">
-                                        <rect key="frame" x="0.0" y="30" width="414" height="20.333333333333329"/>
+                                        <rect key="frame" x="0.0" y="45" width="414" height="35"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V2L-co-gIL">
-                                                <rect key="frame" x="0.0" y="0.0" width="59" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="59" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mon" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhj-JS-hD9">
-                                                <rect key="frame" x="58.999999999999993" y="0.0" width="59.333333333333321" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="58.999999999999993" y="0.0" width="59.333333333333321" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tue" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xgS-Qq-cBN">
-                                                <rect key="frame" x="118.33333333333334" y="0.0" width="59.000000000000028" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="118.33333333333334" y="0.0" width="59.000000000000028" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6E-XM-sf7">
-                                                <rect key="frame" x="177.33333333333334" y="0.0" width="59.333333333333314" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="177.33333333333334" y="0.0" width="59.333333333333314" height="35"/>
+                                                <color key="backgroundColor" red="0.44313725490196076" green="0.56862745098039214" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thu" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJk-yu-YAF">
-                                                <rect key="frame" x="236.66666666666669" y="0.0" width="59.000000000000057" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="236.66666666666669" y="0.0" width="59.000000000000057" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LDI-Gg-cW7">
-                                                <rect key="frame" x="295.66666666666674" y="0.0" width="59.333333333333314" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="295.66666666666674" y="0.0" width="59.333333333333314" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9a-e1-cUR">
-                                                <rect key="frame" x="355" y="0.0" width="59" height="20.333333333333329"/>
-                                                <color key="backgroundColor" red="0.16078431372549018" green="0.52156862745098043" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.16470588235294117" green="0.1764705882352941" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="355" y="0.0" width="59" height="35"/>
+                                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                                                <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.43761613965034485" green="0.56549257040023804" blue="0.76868534088134766" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="srB-sr-P1L"/>
+                                        </constraints>
                                     </stackView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D5s-gU-qV3" customClass="JTAppleCalendarView" customModule="JTAppleCalendar">
-                                        <rect key="frame" x="0.0" y="50.333333333333314" width="414" height="355"/>
-                                        <color key="backgroundColor" red="0.16078431372549018" green="0.3634619530682644" blue="0.66666666666666663" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="355" id="WSt-wn-Y1M"/>
-                                        </constraints>
+                                        <rect key="frame" x="0.0" y="80" width="414" height="403"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="yeR-gj-hQp">
-                                            <size key="itemSize" width="60" height="60"/>
+                                            <size key="itemSize" width="90" height="90"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomCell" id="Igl-4h-YCb" userLabel="dayCell" customClass="CustomCell" customModule="HabitTrack" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKa-3f-UgB">
-                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
-                                                            <color key="backgroundColor" red="0.14509803921568626" green="0.80784313725490198" blue="0.81960784313725488" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <rect key="frame" x="21" y="21" width="48" height="48"/>
+                                                            <color key="backgroundColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="40" id="5zE-7r-qau"/>
-                                                                <constraint firstAttribute="height" constant="40" id="ja8-d1-9VK"/>
+                                                                <constraint firstAttribute="width" constant="48" id="5zE-7r-qau"/>
+                                                                <constraint firstAttribute="height" constant="48" id="ja8-d1-9VK"/>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MG7-sQ-2mO">
-                                                            <rect key="frame" x="9" y="20" width="42" height="21"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <rect key="frame" x="24" y="35" width="43" height="21"/>
+                                                            <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -178,15 +185,56 @@
                                         </connections>
                                     </collectionView>
                                 </subviews>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="I2Q-B1-lXb" userLabel="logoStackView">
+                                <rect key="frame" x="127" y="72" width="161" height="63"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dZ-RX-SZb">
+                                        <rect key="frame" x="0.0" y="0.0" width="58" height="63"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="58" id="0zm-zV-fBF"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="j2p-Mx-hdc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="20597624_1401678279885987_479472815_o" translatesAutoresizingMaskIntoConstraints="NO" id="kuI-fd-8ds">
+                                        <rect key="frame" x="53" y="0.0" width="55" height="63"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="55" id="bcD-WV-Cr5"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8OG-tb-r0P">
+                                        <rect key="frame" x="103" y="0.0" width="58" height="63"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="58" id="fUP-LW-21l"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cIR-uc-tY4">
+                                <rect key="frame" x="94" y="141" width="226" height="3"/>
+                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="cIR-uc-tY4" secondAttribute="bottom" constant="-1" id="9oT-C5-hNN"/>
                             <constraint firstItem="Iox-Sd-Xjb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="B89-9B-H1L"/>
                             <constraint firstAttribute="trailing" secondItem="Iox-Sd-Xjb" secondAttribute="trailing" id="FZT-eY-eZT"/>
-                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="9.6666666666666572" id="O8z-A9-4BE"/>
-                            <constraint firstItem="1a9-1p-Np6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="a53-9d-AqA"/>
-                            <constraint firstAttribute="trailing" secondItem="1a9-1p-Np6" secondAttribute="trailing" id="y9W-TL-Pt2"/>
+                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="KIr-3b-ieu"/>
+                            <constraint firstItem="cIR-uc-tY4" firstAttribute="top" secondItem="I2Q-B1-lXb" secondAttribute="bottom" constant="6" id="OY0-kF-1KJ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cIR-uc-tY4" secondAttribute="trailing" constant="74" id="Ouv-Ri-A7K"/>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="I2Q-B1-lXb" secondAttribute="bottom" constant="8" symbolic="YES" id="ds1-nI-Zw6"/>
+                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="centerX" secondItem="1a9-1p-Np6" secondAttribute="centerX" id="lfo-Mc-rP0"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1a9-1p-Np6" secondAttribute="bottom" constant="110" id="sQ1-a7-0H9"/>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="143" id="uqQ-iZ-dlZ"/>
+                            <constraint firstItem="cIR-uc-tY4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wXO-3N-6XB"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Your Schedule" id="pL7-c6-BUW">
@@ -206,6 +254,7 @@
                         <outlet property="goBackwardButton" destination="ROE-WV-O6Y" id="Azu-vn-T0t"/>
                         <outlet property="goForwardButton" destination="Oq9-nI-lic" id="PXR-6Q-8vT"/>
                         <outlet property="monthLabel" destination="Yn4-4v-k3A" id="qL1-gX-Kfc"/>
+                        <outlet property="todayButton" destination="F4r-vv-Vd9" id="EFy-rX-NSF"/>
                         <segue destination="q0C-KZ-OBW" kind="show" identifier="dateClicked" animates="NO" id="Zcb-qn-q89"/>
                         <segue destination="s0p-xy-r1q" kind="show" identifier="addClicked" animates="NO" id="ojA-b3-eyH"/>
                     </connections>
@@ -227,9 +276,13 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="qyn-T1-RSr" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="FPZ-tf-Yad">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="FPZ-tf-Yad">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -252,5 +305,6 @@
     <resources>
         <image name="004-next" width="512" height="512"/>
         <image name="005-back" width="512" height="512"/>
+        <image name="20597624_1401678279885987_479472815_o" width="1030" height="1217"/>
     </resources>
 </document>

@@ -11,15 +11,18 @@ import UIKit
 import Eureka
 import ColorPickerRow
 import CoreData
+import UserNotifications
 
-class NewGoalController: FormViewController {
+class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
     
     var newGoal = CoreDataHelper.newGoal()
     var groupDict = CoreDataHelper.retrieveGroupDict()
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
     
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
     
     var reminders = [NSManagedObject]()
+    var isGrantedNotificationAccess = false
     
     let colors = ["CD5C5C", "F08080", "FA8072", "E9967A", "FFA07A", "DC143C", "FF0000", "B22222", "8B0000", "FFC0CB", "FFB6C1", "FF69B4", "FF1493", "C71585", "DB7093", "FFA07A", "FF7F50", "FF6347", "FF4500", "FF8C00", "FFA500", "FFD700", "FFFF00", "FFE4B5", "FFDAB9", "F0E68C", "E6E6FA", "D8BFD8", "DDA0DD", "EE82EE", "DA70D6", "FF00FF", "BA55D3", "9370DB", "663399", "8A2BE2", "9400D3", "9932CC", "8B008B", "800080", "4B0082", "6A5ACD", "483D8B", "7B68EE", "191970", "00008B", "0000CD", "0000FF", "4169E1", "7B68EE", "6495ED", "1E90FF", "00BFFF", "87CEFA", "87CEEB", "B0E0E6", "B0C4DE", "4682B4", "5F9EA0", "00CED1", "40E0D0", "7FFFD4", "AFEEEE", "E0FFFF", "00FFFF", "008080", "008B8B", "20B2AA", "66CDAA", "6B8E23", "9ACD32", "006400", "228B22", "3CB371", "00FF7F", "00FA9A", "98FB98", "32CD32", "00FF00", "7FFF00", "ADFF2F"]
         
@@ -27,7 +30,16 @@ class NewGoalController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        //registerForLocalNotification(on: UIApplication.shared)
+        
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert,.sound,.badge],
+            completionHandler: { (granted,error) in
+                self.isGrantedNotificationAccess = granted
+        }
+        )
+        
+        cancelButton.setTitleTextAttributes([NSFontAttributeName : UIFont(name: "November", size: 17)!], for: UIControlState.normal)
         
         
         if groups.count == 0 {
@@ -47,7 +59,9 @@ class NewGoalController: FormViewController {
                 }
                 row.add(rule: ruleRequiredViaClosure)
                 row.validationOptions = .validatesAlways
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             .cellUpdate { cell, row in
                 if !row.isValid {
                     cell.titleLabel?.textColor = .red
@@ -57,7 +71,9 @@ class NewGoalController: FormViewController {
             <<< SwitchRow("One Day") {
                 $0.title = $0.tag
                 $0.value = false
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             <<< DateInlineRow("Start Date") {
                 $0.title = $0.tag
                 $0.value = Date()
@@ -71,6 +87,8 @@ class NewGoalController: FormViewController {
                     DateInlineRow.toggleInlineRow()
                     DateInlineRow.toggleInlineRow()
                 }
+            }).cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
             })
             <<< DateInlineRow("End Date") {
                 $0.title = $0.tag
@@ -85,6 +103,8 @@ class NewGoalController: FormViewController {
                     DateInlineRow.toggleInlineRow()
                     DateInlineRow.toggleInlineRow()
                 }
+            }).cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
             })
             <<< DateInlineRow("Date") {
                 $0.title = $0.tag
@@ -92,7 +112,9 @@ class NewGoalController: FormViewController {
                 $0.hidden = Condition.function(["One Day"], { form in
                     return !((form.rowBy(tag: "One Day") as? SwitchRow)?.value == true)
                 })
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             
         +++ Section("Repeat")
             <<< PushRow<String>("Repeat Interval") {
@@ -100,7 +122,9 @@ class NewGoalController: FormViewController {
                 $0.value = "None"
                 $0.selectorTitle = "Select a Repeat Interval"
                 $0.options = ["None", "Daily", "Weekdays", "Weekends", "Weekly", "Every Other Week", "Monthly"]
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
 
             <<< PushRow<String>("Repeat End Date") {
                 $0.title = $0.tag
@@ -110,14 +134,18 @@ class NewGoalController: FormViewController {
                 $0.hidden = Condition.function(["Repeat Interval"], { form in
                     return !((form.rowBy(tag: "Repeat Interval") as? PushRow)?.value != "None")
                 })
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             <<< DateInlineRow("Custom Repeat End Date") {
                 $0.title = $0.tag
                 $0.value = Date()
                 $0.hidden = Condition.function(["Repeat End Date"], { form in
                     return !((form.rowBy(tag: "Repeat End Date") as? PushRow)?.value == "Custom...")
                 })
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
         +++ Section("Category")
             <<< PushRow<String> ("Group"){
                 $0.title = "Category"
@@ -135,7 +163,9 @@ class NewGoalController: FormViewController {
                     cell.textLabel?.textColor = .red
                     cell.layer.borderColor = UIColor.red.cgColor
                 }
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             
             <<< TextRow("New Group Name") { row in
                 row.title = "New Group Name"
@@ -145,7 +175,9 @@ class NewGoalController: FormViewController {
                     return !((form.rowBy(tag: "Group") as? PushRow)?.value == "New...")
                 })
                 
-            }
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            })
             
             <<< ColorPickerRow("New Group Color") { row in
                 row.title = "New Group Color"
@@ -159,6 +191,7 @@ class NewGoalController: FormViewController {
             }.cellSetup({ (cell, row) in
                 let palette = self.getColorPalette()
                 cell.palettes = [palette]
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
             })
             
             +++ MultivaluedSection(multivaluedOptions: [.Insert, .Delete], header: "Reminders") {
@@ -171,11 +204,7 @@ class NewGoalController: FormViewController {
                     return TimeRow("tag_\(index+1)") {
                         let gregorian = Calendar(identifier: .gregorian)
                         let now = Date()
-                        var components = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: now)
-                        
-                        components.hour = 5
-                        components.minute = 00
-                        components.second = 00
+                        let components = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: now)
                         
                         let defaultTime = gregorian.date(from: components)!
                         $0.baseValue = defaultTime
@@ -187,7 +216,9 @@ class NewGoalController: FormViewController {
         +++ Section("Submit")
             <<< ButtonRow ("Save") {
                 $0.title = $0.tag
-            }.onCellSelection({ (cell, row) in
+            }.cellSetup({ (cell, row) in
+                cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onCellSelection({ (cell, row) in
                 let formValues = self.form.values()
                 
                 let alertController = UIAlertController(title: "Could not save", message: "\n", preferredStyle: .alert)
@@ -278,7 +309,8 @@ class NewGoalController: FormViewController {
                     let time = formValues["tag_\(i)"] as! Date
                     let printDate = formatter.string(from: time)
                     print("saved \(printDate)")
-                    self.saveReminder(time: time)
+                    print(time)
+                    self.saveReminder(time: time, goal: self.newGoal)
                     self.newGoal.reminders?.adding(time)
                     i+=1
                     self.newGoal.reminderCount += 1
@@ -291,9 +323,29 @@ class NewGoalController: FormViewController {
             })
     }
 
-    func saveReminder(time: Date) {
+    
+    func saveReminder(time: Date, goal: Goal) {
         
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        if isGrantedNotificationAccess == true {
+            let content = UNMutableNotificationContent()
+            content.title = "Don't Forget!"
+            content.body = goal.title!
+            content.categoryIdentifier = "message"
+            content.setValue("YES", forKeyPath: "shouldAlwaysAlertWhileAppIsForeground")
+            
+            let triggerDate =
+                Calendar.current.dateComponents([.day, .hour, .minute], from: time)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: "HabitRabbit Message \()", content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            print("WILL DISPATCH LOCAL NOTIFICATION AT ", time)
+        }
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else
+        { return }
+        
         let managedContext = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "Reminder", in: managedContext)
         
@@ -306,7 +358,6 @@ class NewGoalController: FormViewController {
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
-        
     }
 
     func repeatCreateGoal (repeatInterval: String, repeatEndDate: Date) {
@@ -485,4 +536,22 @@ class NewGoalController: FormViewController {
         return ColorPalette(name: "rowColors", palette: colorSpecs)
     }
     
+}
+
+extension NewGoalController {
+    func randomKeyGenerator() -> String {
+        
+        let letters : NSString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let len = UInt32(letters.length)
+        
+        var randomString = ""
+        
+        for _ in 0 ..< 4 {
+            let rand = arc4random_uniform(len)
+            var nextChar = letters.character(at: Int(rand))
+            randomString += NSString(characters: &nextChar, length: 1) as String
+        }
+        
+        return randomString
+    }
 }

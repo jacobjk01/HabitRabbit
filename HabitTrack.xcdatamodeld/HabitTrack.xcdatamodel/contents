@@ -9,6 +9,7 @@
         <attribute name="repeatEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="rerun" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" customClassName="NSArray" syncable="YES"/>
+        <attribute name="streak" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="reminders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Reminder" inverseName="goal" inverseEntity="Reminder" syncable="YES"/>
     </entity>
@@ -17,7 +18,7 @@
         <relationship name="goal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Goal" inverseName="reminders" inverseEntity="Goal" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Goal" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="Goal" positionX="-63" positionY="-18" width="128" height="210"/>
         <element name="Reminder" positionX="-63" positionY="54" width="128" height="75"/>
     </elements>
 </model>

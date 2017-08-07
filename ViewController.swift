@@ -9,13 +9,15 @@
 import UIKit
 import JTAppleCalendar
 import CoreData
+import UserNotifications
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var goForwardButton: UIButton!
     @IBOutlet weak var goBackwardButton: UIButton!
+    @IBOutlet weak var todayButton: UIBarButtonItem!
 
     
     let formatter = DateFormatter()
@@ -27,15 +29,19 @@ class ViewController: UIViewController {
     static var selectedDate = Date()
     var currentSection = 0
     
+    static var isGrantedNotificationAccess:Bool = false
+    
+    
     static var todayReminders: [Date] = []
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+            
         calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
-        
+        todayButton.setTitleTextAttributes([NSFontAttributeName : UIFont(name: "November", size: 17)], for: UIControlState.normal)
         
         setupCalendarView()
 
@@ -50,21 +56,22 @@ class ViewController: UIViewController {
 //            print(i.reminders)
 //        }
         today = Date()
+
+        print("view loaded")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         ViewController.goals = CoreDataHelper.retrieveGoals()
         todayGoals = []
-        
-        calendarView.reloadData()
         print("today's reminders: \(ViewController.todayReminders)")
         printReminders()
+        print("view appeared")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        //resetReminders()
         calendarView.reloadData()
+        print ("view will appear")
     }
     
     
@@ -158,6 +165,13 @@ class ViewController: UIViewController {
         }
     }
     
+    func scheduleReminders() {
+        for reminder in ViewController.todayReminders {
+            print("schedule: \(reminder)")
+            //LocalNotification.dispatchlocalNotification(with: "Don't Forget!", body: "insertgoalname", at: reminder)
+        }
+    }
+    
 }
 
 extension ViewController: JTAppleCalendarViewDataSource{
@@ -198,7 +212,7 @@ extension ViewController: JTAppleCalendarViewDelegate {
         cell.selectedView.isHidden = true
         // Setup Cell text
         cell.dateLabel.text = cellState.text
-        cell.selectedView.layer.cornerRadius = cell.selectedView.frame.width/2
+        //cell.selectedView.layer.cornerRadius = cell.selectedView.frame.width/2
         
         // Setup text color
         if cellState.dateBelongsTo == .thisMonth {
@@ -310,7 +324,12 @@ extension ViewController: JTAppleCalendarViewDelegate {
             }
         }
         
+        cell.selectedView.isHidden = false
+        
         cell.addSubview(cell.lineView)
+        
+        //scheduleReminders()
+
         
         return cell
     }
@@ -319,7 +338,6 @@ extension ViewController: JTAppleCalendarViewDelegate {
         
         guard let validCell = cell as? CustomCell else { return }
         //print(validCell.dayGoals)
-        validCell.selectedView.isHidden = false
         
         ViewController.tableGoals = []
         
@@ -334,12 +352,6 @@ extension ViewController: JTAppleCalendarViewDelegate {
         }
         
     }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        guard let validCell = cell as? CustomCell else { return }
-        validCell.selectedView.isHidden = true
-        ViewController.tableGoals = []
-    }
 
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         formatter.dateFormat = "MMMM yyyy"
@@ -349,3 +361,67 @@ extension ViewController: JTAppleCalendarViewDelegate {
     
     
 }
+
+//class LocalNotification: NSObject, UNUserNotificationCenterDelegate {
+//    
+//    class func registerForLocalNotification(on application:UIApplication) {
+//        if (UIApplication.instancesRespond(to: #selector(UIApplication.registerUserNotificationSettings(_:)))) {
+////            let notificationCategory: UIMutableUserNotificationCategory = UIMutableUserNotificationCategory()
+////            notificationCategory.identifier = "NOTIFICATION_CATEGORY"
+//            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
+//                (granted, error) in
+//                if !granted {
+//                    print("Something went wrong")
+//                }
+//            }
+//            UNUserNotificationCenter.current().delegate = LocalNotification()
+//
+//            
+//            //registering for the notification.
+//            application.registerUserNotificationSettings(UIUserNotificationSettings(types:[.sound, .alert, .badge], categories: nil))
+//        }
+//    }
+//    
+//    class func dispatchlocalNotification(with title: String, body: String, userInfo: [AnyHashable: Any]? = nil, at date:Date) {
+//        
+//        if #available(iOS 10.0, *) {
+//            
+//            let center = UNUserNotificationCenter.current()
+//            let content = UNMutableNotificationContent()
+//            content.title = title
+//            content.body = body
+//            content.sound = UNNotificationSound.default()
+//            //content.setValue("YES", forKeyPath: "shouldAlwaysAlertWhileAppIsForeground")
+//            
+//            if let info = userInfo {
+//                content.userInfo = info
+//            }
+//            
+//            let comp = Calendar.current.dateComponents([.day, .hour, .minute], from: date)
+//            
+//            let trigger = UNCalendarNotificationTrigger(dateMatching: comp, repeats: false)
+//            
+//            let request = UNNotificationRequest(identifier: "com.jacobkim.HabitRabbit", content: content, trigger: trigger)
+//
+//            center.add(request)
+//            
+//        } else {
+//            
+//            let notification = UILocalNotification()
+//            notification.fireDate = date
+//            notification.alertTitle = title
+//            notification.alertBody = body
+//            notification.soundName = UILocalNotificationDefaultSoundName
+//            
+//            if let info = userInfo {
+//                notification.userInfo = info
+//            }
+//            
+//            UIApplication.shared.scheduleLocalNotification(notification)
+//            
+//        }
+//        
+//        print("WILL DISPATCH LOCAL NOTIFICATION AT ", date)
+//        
+//    }
+//}

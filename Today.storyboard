@@ -9,6 +9,11 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="November Regular.ttf">
+            <string>November</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Goals-->
         <scene sceneID="d72-V1-Nns">
@@ -30,28 +35,19 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="207"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hyk-m8-dKx" id="1ID-ZL-3bB">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="207"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="206.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eW8-2I-Aeh">
                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="207"/>
-                                                    <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete 'blank' more to reach your goal." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENE-iq-W4g" userLabel="reachGoalLabel">
-                                                    <rect key="frame" x="28" y="58" width="301" height="38"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="38" id="CHQ-7R-bI8"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Goal goes here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cA-CN-2XZ" userLabel="goalLabel">
-                                                    <rect key="frame" x="28" y="24" width="186" height="26"/>
+                                                    <rect key="frame" x="28" y="29" width="186" height="22"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="186" id="hu6-pK-PM7"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
+                                                    <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -64,40 +60,46 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGo-PN-wTs">
                                                     <rect key="frame" x="28" y="146" width="186" height="25"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="25" id="bYn-Vr-UbP"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HSw-9W-Hfq" userLabel="divisionLine">
                                                     <rect key="frame" x="38" y="136" width="320" height="1"/>
-                                                    <color key="backgroundColor" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" red="0.43761613965034485" green="0.56549257040023804" blue="0.76868534088134766" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="6J6-4x-nv5"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete 'blank' more to reach your goal." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENE-iq-W4g" userLabel="reachGoalLabel">
+                                                    <rect key="frame" x="67" y="51" width="262" height="57"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="57" id="8eg-2t-uyB"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="November" family="November" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="347" id="2Nk-MG-xDv"/>
-                                                <constraint firstItem="4cA-CN-2XZ" firstAttribute="leading" secondItem="ENE-iq-W4g" secondAttribute="leading" id="76R-Ib-qBp"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="leading" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="8" symbolic="YES" id="EJc-Cq-rqQ"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="top" secondItem="4cA-CN-2XZ" secondAttribute="bottom" constant="8" symbolic="YES" id="QZB-jy-rFg"/>
-                                                <constraint firstItem="Cit-je-l84" firstAttribute="leading" secondItem="ENE-iq-W4g" secondAttribute="trailing" constant="8" symbolic="YES" id="RM0-Cx-tou"/>
+                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="top" secondItem="4cA-CN-2XZ" secondAttribute="bottom" id="6li-Ru-Mag"/>
+                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="ENE-iq-W4g" secondAttribute="bottom" constant="28" id="74W-AH-EVp"/>
+                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="trailing" secondItem="4cA-CN-2XZ" secondAttribute="trailing" id="8rY-y3-BaN"/>
+                                                <constraint firstItem="Cit-je-l84" firstAttribute="leading" secondItem="ENE-iq-W4g" secondAttribute="trailing" constant="8" symbolic="YES" id="9R8-Mt-6Bg"/>
+                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="leading" secondItem="4cA-CN-2XZ" secondAttribute="leading" id="BkM-4v-RyR"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="leading" secondItem="1ID-ZL-3bB" secondAttribute="leading" id="U2X-QT-ewh"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="leading" secondItem="tGo-PN-wTs" secondAttribute="leading" id="UMF-HW-4Wz"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="top" id="UVN-FL-Rii"/>
                                                 <constraint firstItem="Cit-je-l84" firstAttribute="trailing" secondItem="1ID-ZL-3bB" secondAttribute="trailingMargin" id="UbV-dP-si7"/>
+                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="centerX" secondItem="HSw-9W-Hfq" secondAttribute="centerX" id="UyF-7S-HpA"/>
                                                 <constraint firstItem="Cit-je-l84" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="31" id="Z2t-ry-ZWb"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="50" id="c04-KC-Onf"/>
                                                 <constraint firstItem="HSw-9W-Hfq" firstAttribute="leading" secondItem="1ID-ZL-3bB" secondAttribute="leadingMargin" constant="30" id="cy7-Bz-C7q"/>
-                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="ENE-iq-W4g" secondAttribute="bottom" constant="40" id="gGu-hQ-ecx"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="centerY" secondItem="1ID-ZL-3bB" secondAttribute="centerY" id="iGZ-u8-hzr"/>
-                                                <constraint firstItem="4cA-CN-2XZ" firstAttribute="trailing" secondItem="tGo-PN-wTs" secondAttribute="trailing" id="kp1-u3-1mv"/>
                                                 <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="128" id="mvq-FA-SrX"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="HSw-9W-Hfq" secondAttribute="trailing" constant="9" id="pnd-HZ-3kp"/>
-                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="top" secondItem="HSw-9W-Hfq" secondAttribute="bottom" constant="9" id="sE7-CF-Tal"/>
+                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="top" secondItem="HSw-9W-Hfq" secondAttribute="bottom" constant="9" id="uRn-pa-JoJ"/>
+                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="leading" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="8" symbolic="YES" id="vfC-qk-COo"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="tGo-PN-wTs" secondAttribute="bottom" constant="27.5" id="zTh-jW-Sxc"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
@@ -117,6 +119,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
+                                            <outlet property="arrowPicture" destination="Cit-je-l84" id="iHI-EH-chg"/>
                                             <outlet property="descriptionLabel" destination="ENE-iq-W4g" id="Bdq-qz-q0N"/>
                                             <outlet property="divisionLine" destination="HSw-9W-Hfq" id="I7I-mD-hPP"/>
                                             <outlet property="goalLabel" destination="4cA-CN-2XZ" id="nUE-Fs-bsV"/>
@@ -128,7 +131,7 @@
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Goals Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKc-xF-Kh9">
                                 <rect key="frame" x="53" y="300" width="268" height="66"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -153,6 +156,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="doneButton" destination="DL3-YJ-3IC" id="Put-jW-HR6"/>
                         <outlet property="noGoalsLabel" destination="LKc-xF-Kh9" id="Lxw-JI-OUh"/>
                         <outlet property="tableView" destination="3rb-9X-MW9" id="Q9B-VA-txc"/>
                         <segue destination="fwg-Ea-Lqf" kind="unwind" identifier="unwindToHome" unwindAction="unwindToCalendar:" id="JxX-XK-GFv"/>
@@ -168,9 +172,13 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3QN-3R-gXO" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="a55-Wv-OEc">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="a55-Wv-OEc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

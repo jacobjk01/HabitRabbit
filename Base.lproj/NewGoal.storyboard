@@ -30,6 +30,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cancelButton" destination="Mlt-rV-TL7" id="uZA-oJ-v93"/>
                         <segue destination="aCp-BO-TUY" kind="unwind" identifier="unwindToCalendar" unwindAction="unwindToCalendar:" id="DmV-Qa-0Q5"/>
                     </connections>
                 </viewController>
@@ -43,9 +44,13 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r8n-1j-rXg" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KcW-Rv-SKD">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="KcW-Rv-SKD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

@@ -15,6 +15,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var noGoalsLabel: UILabel!
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     
     var formatter = DateFormatter()
     
@@ -23,6 +24,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         tableView.isHidden = false
         noGoalsLabel.isHidden = true
+        doneButton.setTitleTextAttributes([NSFontAttributeName : UIFont(name: "November", size: 17)], for: UIControlState.normal)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -79,6 +81,14 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
     }
     
+    func updateGoalStreaks(changedGoal: Goal) {
+        for goal in ViewController.goals {
+            if goal.title == changedGoal.title {
+                goal.streak += 1
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ViewController.tableGoals.count
     }
@@ -111,13 +121,15 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         cell.goalLabel.text = goal.title
         if ViewController.tableGoals[row].completionStatus == "Done" {
-            cell.descriptionLabel.text = "Great! You've successfully finished this goal.streak times in a row!"
+            cell.descriptionLabel.text = "Great! You've successfully finished this \(ViewController.tableGoals[row].streak) times in a row!"
             cell.divisionLine.isHidden = true
             cell.groupLabel.isHidden = true
+            cell.arrowPicture.isHidden = true
         } else {
             cell.descriptionLabel.text = "Complete This!"
             cell.divisionLine.isHidden = false
             cell.groupLabel.isHidden = false
+            cell.arrowPicture.isHidden = false
         }
 //        cell.streakLabel
         cell.groupLabel.text = goal.group
@@ -146,7 +158,6 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
                 let deletedGoal = ViewController.tableGoals[indexPath.row]
-                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Reminder")
                 
                     let alertController = UIAlertController(title: "Are you sure?", message: "\n", preferredStyle: .actionSheet)
                 
@@ -194,16 +205,18 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 }
                 let cell = tableView.cellForRow(at: indexPath) as! GoalCell
                 cell.backgroundColor = UIColor(hex: "E7FFE7")
+                self.updateGoalStreaks(changedGoal: changedGoal)
                 
                 cell.divisionLine.isHidden = true
                 cell.groupLabel.isHidden = true
+                cell.arrowPicture.isHidden = true
+                cell.descriptionLabel.text = "Great! You've successfully finished this \(changedGoal.streak) times in a row!"
                 
                 tableView.beginUpdates()
                 tableView.endUpdates()
                 
                 
                 CoreDataHelper.saveGoal()
-                
             })
             
             checkAction.backgroundColor = UIColor.green
