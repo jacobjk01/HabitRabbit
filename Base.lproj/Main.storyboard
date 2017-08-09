@@ -28,7 +28,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1a9-1p-Np6" userLabel="CalendarStackView">
-                                <rect key="frame" x="0.0" y="143" width="414" height="483"/>
+                                <rect key="frame" x="0.0" y="170" width="414" height="483"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iox-Sd-Xjb" userLabel="MonthHeaderView" customClass="MonthHeaderView" customModule="HabitTrack" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
@@ -187,11 +187,15 @@
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cIR-uc-tY4">
+                                <rect key="frame" x="94" y="160" width="226" height="2"/>
+                                <color key="backgroundColor" red="0.44313725490196076" green="0.56862745098039214" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="I2Q-B1-lXb" userLabel="logoStackView">
-                                <rect key="frame" x="127" y="72" width="161" height="63"/>
+                                <rect key="frame" x="126" y="79" width="161" height="66"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dZ-RX-SZb">
-                                        <rect key="frame" x="0.0" y="0.0" width="58" height="63"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="58" height="66"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="58" id="0zm-zV-fBF"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="j2p-Mx-hdc"/>
@@ -201,13 +205,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="20597624_1401678279885987_479472815_o" translatesAutoresizingMaskIntoConstraints="NO" id="kuI-fd-8ds">
-                                        <rect key="frame" x="53" y="0.0" width="55" height="63"/>
+                                        <rect key="frame" x="53" y="0.0" width="55" height="66"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="55" id="bcD-WV-Cr5"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8OG-tb-r0P">
-                                        <rect key="frame" x="103" y="0.0" width="58" height="63"/>
+                                        <rect key="frame" x="103" y="0.0" width="58" height="66"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="58" id="fUP-LW-21l"/>
                                         </constraints>
@@ -217,24 +221,20 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cIR-uc-tY4">
-                                <rect key="frame" x="94" y="141" width="226" height="3"/>
-                                <color key="backgroundColor" red="0.44151970744132996" green="0.56941735744476318" blue="0.77260643243789673" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="cIR-uc-tY4" secondAttribute="bottom" constant="-1" id="9oT-C5-hNN"/>
+                            <constraint firstItem="cIR-uc-tY4" firstAttribute="top" secondItem="I2Q-B1-lXb" secondAttribute="bottom" constant="15" id="7RE-zq-jm9"/>
+                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="15" id="8X4-eH-DSc"/>
                             <constraint firstItem="Iox-Sd-Xjb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="B89-9B-H1L"/>
+                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="centerX" secondItem="1a9-1p-Np6" secondAttribute="centerX" id="Bfb-kd-gsM"/>
                             <constraint firstAttribute="trailing" secondItem="Iox-Sd-Xjb" secondAttribute="trailing" id="FZT-eY-eZT"/>
-                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="KIr-3b-ieu"/>
-                            <constraint firstItem="cIR-uc-tY4" firstAttribute="top" secondItem="I2Q-B1-lXb" secondAttribute="bottom" constant="6" id="OY0-kF-1KJ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="cIR-uc-tY4" secondAttribute="trailing" constant="74" id="Ouv-Ri-A7K"/>
-                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="I2Q-B1-lXb" secondAttribute="bottom" constant="8" symbolic="YES" id="ds1-nI-Zw6"/>
-                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="centerX" secondItem="1a9-1p-Np6" secondAttribute="centerX" id="lfo-Mc-rP0"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1a9-1p-Np6" secondAttribute="bottom" constant="110" id="sQ1-a7-0H9"/>
-                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="143" id="uqQ-iZ-dlZ"/>
-                            <constraint firstItem="cIR-uc-tY4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wXO-3N-6XB"/>
+                            <constraint firstItem="cIR-uc-tY4" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="74" id="JUT-Bo-dgT"/>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="170" id="dId-PX-hMd"/>
+                            <constraint firstItem="cIR-uc-tY4" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="160" id="oie-JF-Y6v"/>
+                            <constraint firstItem="I2Q-B1-lXb" firstAttribute="centerX" secondItem="cIR-uc-tY4" secondAttribute="centerX" id="qMR-BA-kFp"/>
+                            <constraint firstItem="1a9-1p-Np6" firstAttribute="top" secondItem="cIR-uc-tY4" secondAttribute="bottom" constant="8" symbolic="YES" id="uhe-qk-Y8w"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1a9-1p-Np6" secondAttribute="bottom" constant="83" id="wYw-55-Egy"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Your Schedule" id="pL7-c6-BUW">

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SwipeCellKit
 import CoreData
+import UserNotifications
 
 class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSource, SwipeTableViewCellDelegate {
     
@@ -42,7 +43,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func deleteAll(deletedGoal: Goal) {
         for goal in ViewController.goals.reversed() {
-            if (goal.title == deletedGoal.title) {
+            if (goal.repeatID == deletedGoal.repeatID) {
                 self.deleteReminders(goal: goal)
                 CoreDataHelper.delete(goal: goal)
             }
@@ -54,8 +55,10 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         let managedContext = appDelegate?.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Reminder")
         
+        var identifiers: [String] = []
         do {
             let result = try managedContext?.fetch(fetchRequest)
+            
             
             var index = 0
             for currentGoal in ViewController.goals {
@@ -63,7 +66,9 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                     index += Int(currentGoal.reminderCount)
                 } else if goal.reminderCount > 0 {
                     for _ in 1...goal.reminderCount {
-                        print("deleted \(String(describing: result?[index]))")
+                        let reminderID = result?[index].value(forKey: "reminderID") as! String
+                        identifiers.append("HabitRabbit Message \(reminderID)")
+                        print("deleted \(reminderID)")
                         managedContext?.delete((result?[index])!)
                         index += 1
                     }
@@ -75,6 +80,11 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 let saveError = error as NSError
                 print(saveError)
             }
+            print(identifiers.count)
+            _ = UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { (requests) in
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+            })
+            
         } catch {
             let fetchError = error as NSError
             print(fetchError)
@@ -99,7 +109,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         let goal = ViewController.tableGoals[row]
         
         if goal.completionStatus == "Done" {
-            return 100
+            return 120
         }
         return cell.frame.height
     }
@@ -169,8 +179,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
                     })
                     let deleteAllAction = UIAlertAction(title: "Delete All", style: .destructive, handler: { (_) in
-                        
-                            self.deleteAll(deletedGoal: deletedGoal)
+                        self.deleteAll(deletedGoal: deletedGoal)
                         
                         ViewController.tableGoals.remove(at: indexPath.row)
                         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
@@ -211,6 +220,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
                 cell.groupLabel.isHidden = true
                 cell.arrowPicture.isHidden = true
                 cell.descriptionLabel.text = "Great! You've successfully finished this \(changedGoal.streak) times in a row!"
+                cell.isUserInteractionEnabled = false
                 
                 tableView.beginUpdates()
                 tableView.endUpdates()
@@ -260,7 +270,6 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         performSegue(withIdentifier: "unwindToHome", sender: nil)
         ViewController.tableGoals = []
         ViewController.selectedDate = Date()
-        ViewController.todayReminders = []
     }
     
 }

@@ -18,6 +18,7 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
     var newGoal = CoreDataHelper.newGoal()
     var groupDict = CoreDataHelper.retrieveGroupDict()
     var groups = Array(Set(CoreDataHelper.retrieveGroups()))
+    var today = Date()
     
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     
@@ -29,6 +30,7 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        today = Date()
         
         //registerForLocalNotification(on: UIApplication.shared)
         
@@ -73,6 +75,14 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 $0.value = false
             }.cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onChange({ (row) in
+                if row.value == false {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None", "Weekly", "Every Other Week", "Monthly"]
+                } else {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None", "Daily", "Weekdays", "Weekends", "Weekly", "Every Other Week", "Monthly"]
+                }
             })
             <<< DateInlineRow("Start Date") {
                 $0.title = $0.tag
@@ -86,6 +96,20 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                     DateInlineRow.value = endDateRow.value
                     DateInlineRow.toggleInlineRow()
                     DateInlineRow.toggleInlineRow()
+                }
+                if DateInlineRow.value?.compare(self.today) == ComparisonResult.orderedAscending {
+                    DateInlineRow.value = self.today
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
+                }
+                let timeDifference = Calendar.current.dateComponents([.month, .day], from: DateInlineRow.value!, to: endDateRow.value!)
+                if (timeDifference.day! > 7) {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None", "Monthly"]
+                }
+                if (timeDifference.month! > 1) {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None"]
                 }
             }).cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
@@ -103,6 +127,15 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                     DateInlineRow.toggleInlineRow()
                     DateInlineRow.toggleInlineRow()
                 }
+                let timeDifference = Calendar.current.dateComponents([.month, .day], from: startDateRow.value!, to: DateInlineRow.value!)
+                if (timeDifference.day! > 7) {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None", "Monthly"]
+                }
+                if (timeDifference.month! > 1) {
+                    let repeatRow: PushRow<String> = self.form.rowBy(tag: "Repeat Interval")!
+                    repeatRow.options = ["None"]
+                }
             }).cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
             })
@@ -114,6 +147,12 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 })
             }.cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onChange({ (DateInlineRow) in
+                if DateInlineRow.value?.compare(self.today) == ComparisonResult.orderedAscending {
+                    DateInlineRow.value = self.today
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
+                }
             })
             
         +++ Section("Repeat")
@@ -121,9 +160,14 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 $0.title = $0.tag
                 $0.value = "None"
                 $0.selectorTitle = "Select a Repeat Interval"
-                $0.options = ["None", "Daily", "Weekdays", "Weekends", "Weekly", "Every Other Week", "Monthly"]
+                $0.options = ["None", "Weekly", "Every Other Week", "Monthly"]
             }.cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onChange({ row in
+                if row.value == nil {
+                    row.value = "None"// set to previously used value or default
+                    row.reload()
+                }
             })
 
             <<< PushRow<String>("Repeat End Date") {
@@ -136,6 +180,11 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 })
             }.cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onChange({ row in
+                if row.value == nil {
+                    row.value = "None"// set to previously used value or default
+                    row.reload()
+                }
             })
             <<< DateInlineRow("Custom Repeat End Date") {
                 $0.title = $0.tag
@@ -145,6 +194,18 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 })
             }.cellSetup({ (cell, row) in
                 cell.textLabel?.font = UIFont(name: "November", size: 17)
+            }).onChange({ (DateInlineRow) in
+                let startDateRow: DateInlineRow = self.form.rowBy(tag: "Start Date")!
+                if startDateRow.value?.compare(DateInlineRow.value!) == ComparisonResult.orderedDescending {
+                    DateInlineRow.value = startDateRow.value
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
+                }
+                if DateInlineRow.value! > today.getDateOfNextYear() {
+                    DateInlineRow.value = startDateRow.value
+                    DateInlineRow.toggleInlineRow()
+                    DateInlineRow.toggleInlineRow()
+                }
             })
         +++ Section("Category")
             <<< PushRow<String> ("Group"){
@@ -211,6 +272,9 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                         $0.title = "Reminder:"
                     }
                 }
+                $0.hidden = Condition.function(["One Day"], { form in
+                    return !((form.rowBy(tag: "One Day") as? SwitchRow)?.value == true)
+                })
             }
 
         +++ Section("Submit")
@@ -264,45 +328,21 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                     self.groupDict[self.newGoal.group!] = self.newGoal.groupColor
                 }
                 
-                self.newGoal.rerun = formValues["Repeat Interval"] as? String
-                if formValues["Repeat End Date"] as? String != "Custom..." && formValues["Repeat Interval"] as? String != "None" {
-                    let repeatEndDate = formValues["Repeat End Date"] as! String
-                    
-                    switch repeatEndDate {
-                        case "One Week Later":
-                            let endRepeat = self.newGoal.endDate?.addingTimeInterval(60*60*24*7)
-                            self.newGoal.repeatEndDate = endRepeat
-                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
-                        case "One Month Later":
-                            let endRepeat = Calendar.current.date(byAdding: .month
-                                , value: 1, to: self.newGoal.endDate! as Date)
-                            self.newGoal.repeatEndDate = endRepeat! as NSDate
-                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
-                        case "Six Months Later":
-                            let endRepeat = Calendar.current.date(byAdding: .month, value: 6, to: self.newGoal.endDate! as Date)
-                            self.newGoal.repeatEndDate = endRepeat as NSDate?
-                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
-                        case "One Year Later":
-                            let endRepeat = Calendar.current.date(byAdding: .year, value: 1, to: self.newGoal.endDate! as Date)
-                            self.newGoal.repeatEndDate = endRepeat as NSDate?
-                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
-                    default:
-                            break
-                    }
-                } else if formValues["Repeat Interval"] as? String != "None" {
-                    let endRepeat = formValues["Custom Repeat End Date"] as? NSDate
-                    self.newGoal.repeatEndDate = endRepeat
-                    self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date)
+                guard (self.newGoal.group != nil && self.newGoal.group != "") else {
+                    alertController.message?.append("Group not valid \n")
+                    self.present(alertController, animated: true)
+                    return
                 }
                 
-                //Reminders
                 
+                //Reminders
                 self.newGoal.reminderCount = 0
                 
                 let formatter = DateFormatter()
                 formatter.timeZone = NSTimeZone.default
                 formatter.timeStyle = .short
                 
+                var reminderTimes: [Date] = []
                 
                 var i: Int = 1
                 while formValues["tag_\(i)"] != nil {
@@ -311,20 +351,72 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                     print("saved \(printDate)")
                     print(time)
                     self.saveReminder(time: time, goal: self.newGoal)
-                    self.newGoal.reminders?.adding(time)
-                    i+=1
+                    reminderTimes.append(time)
                     self.newGoal.reminderCount += 1
+                    i+=1
+                }
+                
+                //Repeat
+                self.newGoal.repeatID = self.randomKeyGenerator()
+                
+                self.newGoal.rerun = formValues["Repeat Interval"] as? String
+                if formValues["Repeat End Date"] as? String != "Custom..." && formValues["Repeat Interval"] as? String != "None" {
+                    let repeatEndDate = formValues["Repeat End Date"] as! String
+                    
+                    switch repeatEndDate {
+                        case "One Week Later":
+                            let endRepeat = self.newGoal.endDate?.addingTimeInterval(60*60*24*7)
+                            self.newGoal.repeatEndDate = endRepeat
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date, reminders: reminderTimes)
+                        case "One Month Later":
+                            let endRepeat = Calendar.current.date(byAdding: .month
+                                , value: 1, to: self.newGoal.endDate! as Date)
+                            self.newGoal.repeatEndDate = endRepeat! as NSDate
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date, reminders: reminderTimes)
+                        case "Six Months Later":
+                            let endRepeat = Calendar.current.date(byAdding: .month, value: 6, to: self.newGoal.endDate! as Date)
+                            self.newGoal.repeatEndDate = endRepeat as NSDate?
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date, reminders: reminderTimes)
+                        case "One Year Later":
+                            let endRepeat = Calendar.current.date(byAdding: .year, value: 1, to: self.newGoal.endDate! as Date)
+                            self.newGoal.repeatEndDate = endRepeat as NSDate?
+                            self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date, reminders: reminderTimes)
+                    default:
+                            break
+                    }
+                } else if formValues["Repeat Interval"] as? String != "None" {
+                    let endRepeat = formValues["Custom Repeat End Date"] as? NSDate
+                    self.newGoal.repeatEndDate = endRepeat
+                    self.repeatCreateGoal(repeatInterval: self.newGoal.rerun!, repeatEndDate: endRepeat! as Date, reminders: reminderTimes)
                 }
                 
                 
+                
+                
                 self.performSegue(withIdentifier: "unwindToCalendar", sender: nil)
-                ViewController.todayReminders = []
                 CoreDataHelper.saveGoal()
             })
     }
 
     
     func saveReminder(time: Date, goal: Goal) {
+        let reminderID = randomKeyGenerator()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else
+        { return }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "Reminder", in: managedContext)
+        
+        let reminder = NSManagedObject(entity: entity!, insertInto: managedContext)
+        reminder.setValue(reminderID, forKeyPath: "reminderID")
+        
+        do {
+            try managedContext.save()
+            reminders.append(reminder)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        
         
         if isGrantedNotificationAccess == true {
             let content = UNMutableNotificationContent()
@@ -337,83 +429,69 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
                 Calendar.current.dateComponents([.day, .hour, .minute], from: time)
             let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
             
-            let request = UNNotificationRequest(identifier: "HabitRabbit Message \()", content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: "HabitRabbit Message \(reminderID)", content: content, trigger: trigger)
+            
+            print("saved: \(reminderID)")
             
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             print("WILL DISPATCH LOCAL NOTIFICATION AT ", time)
         }
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else
-        { return }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "Reminder", in: managedContext)
-        
-        let reminder = NSManagedObject(entity: entity!, insertInto: managedContext)
-        reminder.setValue(time, forKeyPath: "time")
-        
-        do {
-            try managedContext.save()
-            reminders.append(reminder)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
     }
 
-    func repeatCreateGoal (repeatInterval: String, repeatEndDate: Date) {
+    func repeatCreateGoal (repeatInterval: String, repeatEndDate: Date, reminders: [Date]) {
         var tempGoal = newGoal
         switch repeatInterval {
             case "Daily":
-                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
-                     let repeatGoal = goalDayLater(goal: tempGoal)
+                while tempGoal.endDate?.compare(repeatEndDate) == ComparisonResult.orderedAscending {
+                     let repeatGoal = goalDayLater(goal: tempGoal, reminders: reminders)
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
                 }
             case "Weekdays":
-                while (tempGoal.endDate!.compare(repeatEndDate) != ComparisonResult.orderedDescending ) {
+                while (tempGoal.endDate!.compare(repeatEndDate) == ComparisonResult.orderedAscending ) {
                     var repeatGoal = tempGoal
                     if  ((tempGoal.startDate! as Date).isWeekDay() == true) {
                         if (tempGoal.startDate! as Date).isFriday() == true {
-                            repeatGoal = goalWeekendLater(goal: tempGoal)
+                            repeatGoal = goalWeekendLater(goal: tempGoal, reminders: reminders)
                         } else {
-                            repeatGoal = goalDayLater(goal: tempGoal)
+                            repeatGoal = goalDayLater(goal: tempGoal, reminders: reminders)
                         }
                     } else {
-                        repeatGoal = goalAtWeekday(goal: tempGoal)
+                        repeatGoal = goalAtWeekday(goal: tempGoal, reminders: reminders)
                     }
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
                 }
             case "Weekends":
-                while (tempGoal.endDate!.compare(repeatEndDate) != ComparisonResult.orderedDescending) {
+                while (tempGoal.endDate!.compare(repeatEndDate) == ComparisonResult.orderedAscending) {
                     var repeatGoal = tempGoal
                     if  ((tempGoal.startDate! as Date).isWeekend() == true) {
                         if (tempGoal.startDate! as Date).isSunday() == true {
-                            repeatGoal = goalWeekdaysLater(goal: tempGoal)
+                            repeatGoal = goalWeekdaysLater(goal: tempGoal, reminders: reminders)
                         } else {
-                            repeatGoal = goalDayLater(goal: tempGoal)
+                            repeatGoal = goalDayLater(goal: tempGoal, reminders: reminders)
                         }
                         
                     } else {
-                        repeatGoal = goalAtWeekend(goal: tempGoal)
+                        repeatGoal = goalAtWeekend(goal: tempGoal, reminders: reminders)
                     }
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
                 }
             case "Weekly":
-                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                while tempGoal.endDate?.compare(repeatEndDate) == ComparisonResult.orderedAscending {
                     let repeatGoal = goalWeekLater(goal: tempGoal)
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
                 }
             case "Every Other Week":
-                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                while tempGoal.endDate?.compare(repeatEndDate) == ComparisonResult.orderedAscending {
                     let repeatGoal = goalTwoWeekLater(goal: tempGoal)
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
                 }
             case "Monthly":
-                while tempGoal.endDate?.compare(repeatEndDate) != ComparisonResult.orderedDescending {
+                while tempGoal.endDate?.compare(repeatEndDate) == ComparisonResult.orderedAscending {
                     let repeatGoal = goalMonthLater(goal: tempGoal)
                     CoreDataHelper.saveGoal()
                     tempGoal = repeatGoal
@@ -424,36 +502,58 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         }
     }
     
-    func goalDayLater (goal: Goal) -> Goal {
+    func goalDayLater (goal: Goal, reminders: [Date]) -> Goal {
         let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24)
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
+        newGoal.reminderCount = goal.reminderCount
         // insert reminders initialization here
+        
+        let day = Calendar.current.dateComponents([.day], from: newGoal.startDate! as Date)
+        for reminder in reminders {
+            let hour = Calendar.current.dateComponents([.hour, .minute], from: reminder)
+            let newTime = Calendar.current.date(from: DateComponents(day: day.day, hour: hour.hour, minute: hour.minute))
+            saveReminder(time: newTime!, goal: newGoal)
+        }
         return newGoal
     }
     
-    func goalWeekendLater (goal: Goal) -> Goal {
+    func goalWeekendLater (goal: Goal, reminders: [Date]) -> Goal {
         let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*3)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*3)
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
+        newGoal.reminderCount = goal.reminderCount
+        for reminder in reminders {
+            saveReminder(time: reminder.addingTimeInterval(60*60*24*3), goal: newGoal)
+        }
         // insert reminders initialization here
         return newGoal
     }
     
-    func goalWeekdaysLater (goal: Goal) -> Goal {
+    func goalWeekdaysLater (goal: Goal, reminders: [Date]) -> Goal {
         let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate?.addingTimeInterval(60*60*24*6)
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*6)
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
+        newGoal.reminderCount = goal.reminderCount
         // insert reminders initialization here
+        for reminder in reminders {
+            saveReminder(time: reminder.addingTimeInterval(60*60*24*6), goal: newGoal)
+        }
         return newGoal
     }
     
@@ -464,6 +564,8 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*7)
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
         // insert reminders initialization here
         return newGoal
     }
@@ -475,6 +577,8 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         newGoal.endDate = goal.endDate?.addingTimeInterval(60*60*24*7*2)
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
         // insert reminders initialization here
         return newGoal
     }
@@ -486,26 +590,37 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         newGoal.endDate = Calendar.current.date(byAdding: .month, value: 1, to: (goal.endDate as Date?)!) as NSDate?
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
         // insert reminders initialization here
         return newGoal
     }
     
-    func goalAtWeekday (goal: Goal) -> Goal {
+    func goalAtWeekday (goal: Goal, reminders: [Date]) -> Goal {
         let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate
         newGoal.endDate = goal.endDate
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
+        newGoal.reminderCount = goal.reminderCount
         // insert reminders initialization here
         while (!((newGoal.startDate! as Date).isMonday())) {
             newGoal.startDate = newGoal.startDate!.addingTimeInterval(60*60*24)
             newGoal.endDate = newGoal.endDate!.addingTimeInterval(60*60*24)
         }
+        let day = Calendar.current.dateComponents([.day], from: newGoal.startDate! as Date)
+        for reminder in reminders {
+            let hour = Calendar.current.dateComponents([.hour, .minute], from: reminder)
+            let newTime = Calendar.current.date(from: DateComponents(day: day.day, hour: hour.hour, minute: hour.minute))
+            saveReminder(time: newTime!, goal: newGoal)
+        }
         return newGoal
     }
     
-    func goalAtWeekend (goal:Goal) -> Goal {
+    func goalAtWeekend (goal:Goal, reminders: [Date]) -> Goal {
         let newGoal = CoreDataHelper.newGoal()
         newGoal.title = goal.title
         newGoal.startDate = goal.startDate
@@ -513,10 +628,19 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         newGoal.completionStatus = goal.completionStatus
         newGoal.group = goal.group
         newGoal.groupColor = goal.groupColor
+        newGoal.repeatID = goal.repeatID
+        newGoal.completionStatus = "Not Done"
+        newGoal.reminderCount = goal.reminderCount
         // insert reminders initialization here
         while (!((newGoal.startDate! as Date).isSaturday())) {
             newGoal.startDate = newGoal.startDate!.addingTimeInterval(60*60*24)
             newGoal.endDate = newGoal.endDate!.addingTimeInterval(60*60*24)
+        }
+        let day = Calendar.current.dateComponents([.day], from: newGoal.startDate! as Date)
+        for reminder in reminders {
+            let hour = Calendar.current.dateComponents([.hour, .minute], from: reminder)
+            let newTime = Calendar.current.date(from: DateComponents(day: day.day, hour: hour.hour, minute: hour.minute))
+            saveReminder(time: newTime!, goal: newGoal)
         }
         return newGoal
     }
@@ -524,7 +648,6 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
     @IBAction func cancelGoal(_ sender: UIBarButtonItem) {
         CoreDataHelper.delete(goal: newGoal)
         performSegue(withIdentifier: "unwindToCalendar", sender: nil)
-        ViewController.todayReminders = []
     }
     
     func getColorPalette() -> ColorPalette {
@@ -537,6 +660,8 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
     }
     
 }
+
+
 
 extension NewGoalController {
     func randomKeyGenerator() -> String {

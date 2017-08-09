@@ -45,7 +45,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Goal goes here" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cA-CN-2XZ" userLabel="goalLabel">
                                                     <rect key="frame" x="28" y="29" width="186" height="22"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="186" id="hu6-pK-PM7"/>
+                                                        <constraint firstAttribute="width" constant="186" id="IMJ-rd-PHQ"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -59,7 +59,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGo-PN-wTs">
-                                                    <rect key="frame" x="28" y="146" width="186" height="25"/>
+                                                    <rect key="frame" x="28" y="149" width="186" height="22"/>
                                                     <fontDescription key="fontDescription" name="November" family="November" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -67,14 +67,11 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HSw-9W-Hfq" userLabel="divisionLine">
                                                     <rect key="frame" x="38" y="136" width="320" height="1"/>
                                                     <color key="backgroundColor" red="0.43761613965034485" green="0.56549257040023804" blue="0.76868534088134766" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="6J6-4x-nv5"/>
-                                                    </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete 'blank' more to reach your goal." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENE-iq-W4g" userLabel="reachGoalLabel">
-                                                    <rect key="frame" x="67" y="51" width="262" height="57"/>
+                                                    <rect key="frame" x="51" y="51" width="279" height="57"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="57" id="8eg-2t-uyB"/>
+                                                        <constraint firstAttribute="height" constant="57" id="awQ-cX-T7r"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" name="November" family="November" pointSize="14"/>
                                                     <nil key="textColor"/>
@@ -83,22 +80,23 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="347" id="2Nk-MG-xDv"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="top" secondItem="4cA-CN-2XZ" secondAttribute="bottom" id="6li-Ru-Mag"/>
-                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="ENE-iq-W4g" secondAttribute="bottom" constant="28" id="74W-AH-EVp"/>
-                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="trailing" secondItem="4cA-CN-2XZ" secondAttribute="trailing" id="8rY-y3-BaN"/>
-                                                <constraint firstItem="Cit-je-l84" firstAttribute="leading" secondItem="ENE-iq-W4g" secondAttribute="trailing" constant="8" symbolic="YES" id="9R8-Mt-6Bg"/>
-                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="leading" secondItem="4cA-CN-2XZ" secondAttribute="leading" id="BkM-4v-RyR"/>
+                                                <constraint firstItem="4cA-CN-2XZ" firstAttribute="trailing" secondItem="tGo-PN-wTs" secondAttribute="trailing" id="2vZ-yY-YeL"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="HSw-9W-Hfq" secondAttribute="trailing" constant="9" id="4WF-0H-zTP"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="HSw-9W-Hfq" secondAttribute="bottom" constant="61.5" id="6aX-32-lyW"/>
+                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="leading" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="18" id="93q-Yq-Im7"/>
+                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="ENE-iq-W4g" secondAttribute="bottom" constant="28" id="EU9-Zu-111"/>
+                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="leading" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="31" id="Ggd-MU-zOQ"/>
+                                                <constraint firstItem="4cA-CN-2XZ" firstAttribute="leading" secondItem="tGo-PN-wTs" secondAttribute="leading" id="Kpb-e9-omb"/>
+                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="top" secondItem="4cA-CN-2XZ" secondAttribute="bottom" id="QkI-9u-PHo"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="leading" secondItem="1ID-ZL-3bB" secondAttribute="leading" id="U2X-QT-ewh"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="top" id="UVN-FL-Rii"/>
                                                 <constraint firstItem="Cit-je-l84" firstAttribute="trailing" secondItem="1ID-ZL-3bB" secondAttribute="trailingMargin" id="UbV-dP-si7"/>
-                                                <constraint firstItem="ENE-iq-W4g" firstAttribute="centerX" secondItem="HSw-9W-Hfq" secondAttribute="centerX" id="UyF-7S-HpA"/>
                                                 <constraint firstItem="Cit-je-l84" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="31" id="Z2t-ry-ZWb"/>
-                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="leading" secondItem="1ID-ZL-3bB" secondAttribute="leadingMargin" constant="30" id="cy7-Bz-C7q"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ENE-iq-W4g" secondAttribute="trailing" constant="37" id="fuP-VO-Xhs"/>
                                                 <constraint firstItem="eW8-2I-Aeh" firstAttribute="centerY" secondItem="1ID-ZL-3bB" secondAttribute="centerY" id="iGZ-u8-hzr"/>
-                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="128" id="mvq-FA-SrX"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="HSw-9W-Hfq" secondAttribute="trailing" constant="9" id="pnd-HZ-3kp"/>
-                                                <constraint firstItem="tGo-PN-wTs" firstAttribute="top" secondItem="HSw-9W-Hfq" secondAttribute="bottom" constant="9" id="uRn-pa-JoJ"/>
+                                                <constraint firstItem="HSw-9W-Hfq" firstAttribute="top" secondItem="1ID-ZL-3bB" secondAttribute="topMargin" constant="128" id="osf-Oc-eVt"/>
                                                 <constraint firstItem="tGo-PN-wTs" firstAttribute="leading" secondItem="eW8-2I-Aeh" secondAttribute="trailing" constant="8" symbolic="YES" id="vfC-qk-COo"/>
+                                                <constraint firstItem="eW8-2I-Aeh" firstAttribute="leading" secondItem="1ID-ZL-3bB" secondAttribute="leadingMargin" constant="-8" id="zD5-Df-bJP"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="tGo-PN-wTs" secondAttribute="bottom" constant="27.5" id="zTh-jW-Sxc"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>

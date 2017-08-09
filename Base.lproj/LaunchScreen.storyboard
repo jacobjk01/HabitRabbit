@@ -1,27 +1,90 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="November Regular.ttf">
+            <string>November</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Llm-lL-Icb"/>
-                        <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
+                        <viewControllerLayoutGuide type="top" id="dLb-Ot-cTA"/>
+                        <viewControllerLayoutGuide type="bottom" id="pVW-G4-zy4"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                    <view key="view" contentMode="scaleToFill" id="Uec-XW-Ihr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hM-0L-mJA">
+                                <rect key="frame" x="0.0" y="269" width="375" height="128"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="6Ag-z9-LAQ" userLabel="logoStackView">
+                                        <rect key="frame" x="104" y="24" width="166" height="80"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BhS-G3-jqn">
+                                                <rect key="frame" x="0.0" y="0.0" width="58" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="6Rd-gO-CIQ"/>
+                                                    <constraint firstAttribute="width" constant="58" id="UMJ-Oo-z5G"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="20597624_1401678279885987_479472815_o" translatesAutoresizingMaskIntoConstraints="NO" id="hQw-c0-gre">
+                                                <rect key="frame" x="53" y="0.0" width="60" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="60" id="f3F-EU-VqT"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0yg-A5-wme">
+                                                <rect key="frame" x="108" y="0.0" width="58" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="58" id="K1d-9o-as2"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="5es-oP-dVJ"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.44313725490196076" green="0.56862745098039214" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="6Ag-z9-LAQ" secondAttribute="trailing" constant="105" id="IIV-Bw-jQ6"/>
+                                    <constraint firstItem="6Ag-z9-LAQ" firstAttribute="centerX" secondItem="9hM-0L-mJA" secondAttribute="centerX" id="MwK-vC-ISx"/>
+                                    <constraint firstItem="6Ag-z9-LAQ" firstAttribute="centerY" secondItem="9hM-0L-mJA" secondAttribute="centerY" id="tpU-cx-QnU"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="9hM-0L-mJA" firstAttribute="top" secondItem="dLb-Ot-cTA" secondAttribute="bottom" constant="249" id="Mx6-cU-4Vl"/>
+                            <constraint firstItem="9hM-0L-mJA" firstAttribute="centerX" secondItem="Uec-XW-Ihr" secondAttribute="centerX" id="Qw5-lI-mVD"/>
+                            <constraint firstItem="9hM-0L-mJA" firstAttribute="centerY" secondItem="Uec-XW-Ihr" secondAttribute="centerY" id="pp8-Sz-MCW"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="20597624_1401678279885987_479472815_o" width="1030" height="1217"/>
+    </resources>
 </document>
