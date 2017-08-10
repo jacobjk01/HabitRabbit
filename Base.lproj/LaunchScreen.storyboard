@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina3_5" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -18,14 +18,14 @@
                         <viewControllerLayoutGuide type="bottom" id="pVW-G4-zy4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Uec-XW-Ihr">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hM-0L-mJA">
-                                <rect key="frame" x="0.0" y="174" width="320" height="132"/>
+                                <rect key="frame" x="0.0" y="302" width="414" height="132"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screen Shot 2017-08-09 at 10.21.54 PM" translatesAutoresizingMaskIntoConstraints="NO" id="gWo-vO-55d">
-                                        <rect key="frame" x="40" y="0.0" width="240" height="132"/>
+                                        <rect key="frame" x="87" y="0.0" width="240" height="132"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="bRt-Ro-eGM"/>
                                         </constraints>

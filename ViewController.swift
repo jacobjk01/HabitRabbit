@@ -34,7 +34,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
         calendarView.scrollToDate(today)
         monthLabel.text = today.monthAsString()
-        todayButton.setTitleTextAttributes([NSFontAttributeName : UIFont(name: "November", size: 17)], for: UIControlState.normal)
+        todayButton.setTitleTextAttributes([NSFontAttributeName : UIFont(name: "November", size: 17)!], for: UIControlState.normal)
         
         setupCalendarView()
 

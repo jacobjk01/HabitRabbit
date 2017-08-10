@@ -657,7 +657,6 @@ class NewGoalController: FormViewController, UNUserNotificationCenterDelegate {
         
         return ColorPalette(name: "rowColors", palette: colorSpecs)
     }
-    
 }
 
 
