@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -8,11 +8,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="November Regular.ttf">
-            <string>November</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -23,68 +18,43 @@
                         <viewControllerLayoutGuide type="bottom" id="pVW-G4-zy4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Uec-XW-Ihr">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hM-0L-mJA">
-                                <rect key="frame" x="0.0" y="269" width="375" height="128"/>
+                                <rect key="frame" x="0.0" y="174" width="320" height="132"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="6Ag-z9-LAQ" userLabel="logoStackView">
-                                        <rect key="frame" x="104" y="24" width="166" height="80"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BhS-G3-jqn">
-                                                <rect key="frame" x="0.0" y="0.0" width="58" height="80"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="58" id="6Rd-gO-CIQ"/>
-                                                    <constraint firstAttribute="width" constant="58" id="UMJ-Oo-z5G"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="20597624_1401678279885987_479472815_o" translatesAutoresizingMaskIntoConstraints="NO" id="hQw-c0-gre">
-                                                <rect key="frame" x="53" y="0.0" width="60" height="80"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="f3F-EU-VqT"/>
-                                                </constraints>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0yg-A5-wme">
-                                                <rect key="frame" x="108" y="0.0" width="58" height="80"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="58" id="K1d-9o-as2"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="November" family="November" pointSize="55"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Screen Shot 2017-08-09 at 10.21.54 PM" translatesAutoresizingMaskIntoConstraints="NO" id="gWo-vO-55d">
+                                        <rect key="frame" x="40" y="0.0" width="240" height="132"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="80" id="5es-oP-dVJ"/>
+                                            <constraint firstAttribute="width" constant="240" id="bRt-Ro-eGM"/>
                                         </constraints>
-                                    </stackView>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.44313725490196076" green="0.56862745098039214" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="6Ag-z9-LAQ" secondAttribute="trailing" constant="105" id="IIV-Bw-jQ6"/>
-                                    <constraint firstItem="6Ag-z9-LAQ" firstAttribute="centerX" secondItem="9hM-0L-mJA" secondAttribute="centerX" id="MwK-vC-ISx"/>
-                                    <constraint firstItem="6Ag-z9-LAQ" firstAttribute="centerY" secondItem="9hM-0L-mJA" secondAttribute="centerY" id="tpU-cx-QnU"/>
+                                    <constraint firstItem="gWo-vO-55d" firstAttribute="centerX" secondItem="9hM-0L-mJA" secondAttribute="centerX" id="4gP-cf-SO1"/>
+                                    <constraint firstItem="gWo-vO-55d" firstAttribute="top" secondItem="9hM-0L-mJA" secondAttribute="top" id="8Ud-R3-v9i"/>
+                                    <constraint firstAttribute="height" constant="132" id="8ZP-Uu-2sA"/>
+                                    <constraint firstAttribute="bottom" secondItem="gWo-vO-55d" secondAttribute="bottom" id="HEl-wg-bJe"/>
+                                    <constraint firstItem="gWo-vO-55d" firstAttribute="centerY" secondItem="9hM-0L-mJA" secondAttribute="centerY" id="M2x-VN-eiA"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.40392156862745099" green="0.79607843137254897" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="9hM-0L-mJA" firstAttribute="top" secondItem="dLb-Ot-cTA" secondAttribute="bottom" constant="249" id="Mx6-cU-4Vl"/>
-                            <constraint firstItem="9hM-0L-mJA" firstAttribute="centerX" secondItem="Uec-XW-Ihr" secondAttribute="centerX" id="Qw5-lI-mVD"/>
-                            <constraint firstItem="9hM-0L-mJA" firstAttribute="centerY" secondItem="Uec-XW-Ihr" secondAttribute="centerY" id="pp8-Sz-MCW"/>
+                            <constraint firstItem="9hM-0L-mJA" firstAttribute="centerY" secondItem="Uec-XW-Ihr" secondAttribute="centerY" id="48e-Tz-Kxz"/>
+                            <constraint firstItem="9hM-0L-mJA" firstAttribute="leading" secondItem="Uec-XW-Ihr" secondAttribute="leading" id="NvZ-4B-yqg"/>
+                            <constraint firstAttribute="trailing" secondItem="9hM-0L-mJA" secondAttribute="trailing" id="Y0v-vS-cKl"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="52" y="374.66266866566718"/>
+            <point key="canvasLocation" x="49.275362318840585" y="373.36956521739131"/>
         </scene>
     </scenes>
     <resources>
-        <image name="20597624_1401678279885987_479472815_o" width="1030" height="1217"/>
+        <image name="Screen Shot 2017-08-09 at 10.21.54 PM" width="360" height="194"/>
     </resources>
 </document>

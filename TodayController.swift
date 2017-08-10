@@ -17,6 +17,7 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var noGoalsLabel: UILabel!
     @IBOutlet weak var doneButton: UIBarButtonItem!
+    @IBOutlet weak var infoView: UIView!
     
     var formatter = DateFormatter()
     
@@ -39,6 +40,19 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
             tableView.isHidden = true
             noGoalsLabel.isHidden = false
         }
+        
+        if ViewController.tableGoals.count < 2 {
+            infoView.isHidden = false
+            infoView.alpha = 0.3
+        } else {
+            infoView.isHidden = true
+        }
+    }
+    
+    
+    
+    @IBAction func unwindToToday(_ segue: UIStoryboardSegue) {
+        
     }
     
     func deleteAll(deletedGoal: Goal) {
@@ -161,6 +175,10 @@ class TodayController: UIViewController, UITableViewDelegate, UITableViewDataSou
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
